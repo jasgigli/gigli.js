@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerAsyncRule = exports.getAsyncRule = void 0;
 exports.registerSyncRule = registerSyncRule;
 exports.getSyncRule = getSyncRule;
 const syncValidators = {};
@@ -36,3 +37,6 @@ registerSyncRule('max', (state, p) => {
 function getSyncRule(name) {
     return syncValidators[name];
 }
+var asyncValidator_1 = require("./asyncValidator");
+Object.defineProperty(exports, "getAsyncRule", { enumerable: true, get: function () { return asyncValidator_1.getAsyncRule; } });
+Object.defineProperty(exports, "registerAsyncRule", { enumerable: true, get: function () { return asyncValidator_1.registerAsyncRule; } });

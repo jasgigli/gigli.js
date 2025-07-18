@@ -35,21 +35,32 @@ class ValidatedModel {
     static from(data) {
         const instance = new this();
         Object.assign(instance, data);
-        instance.validate();
+        // Synchronously call validate, but if it returns a Promise, throw an error to force migration to async
+        const result = instance.validate();
+        if (result && typeof result.then === 'function') {
+            throw new Error('Use fromAsync() for async validation');
+        }
         return instance;
     }
+    static fromAsync(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const instance = new this();
+            Object.assign(instance, data);
+            yield instance.validate();
+            return instance;
+        });
+    }
     validate() {
-        // Enhanced: Compile metadata to AST and validate using validateAST
-        const ast = getClassAST(this.constructor);
-        let result;
-        (() => __awaiter(this, void 0, void 0, function* () {
-            result = yield (0, validateAST_1.validateAST)(ast, this);
+        return __awaiter(this, void 0, void 0, function* () {
+            // Enhanced: Compile metadata to AST and validate using validateAST
+            const ast = getClassAST(this.constructor);
+            const result = yield (0, validateAST_1.validateAST)(ast, this);
             if (!result.valid) {
                 const errorMsg = result.errors && result.errors.length > 0 ? result.errors.join('; ') : 'Validation failed';
                 throw new Error(errorMsg);
             }
-        }))();
-        return result;
+            return result;
+        });
     }
 }
 exports.ValidatedModel = ValidatedModel;

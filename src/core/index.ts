@@ -4,36 +4,52 @@
 // export type { ValidationOptions, ValidationResult, ValidationSchema } from '../types/validator/types';
 
 // Parser
-export { parse } from './parser/ruleParser';
+export { parse } from "./parser/ruleParser";
 
 // Registry
-export { define, getDefinition } from './registry/definitionRegistry';
-export { getAsyncRule, getSyncRule, registerAsyncRule, registerSyncRule } from './validator/syncValidator';
-export { getTransformer, registerTransformer } from './validator/transformer';
+export { define, getDefinition } from "./registry/definitionRegistry";
+export {
+  getAsyncRule,
+  getSyncRule,
+  registerAsyncRule,
+  registerSyncRule,
+} from "./validator/syncValidator";
+export { getTransformer, registerTransformer } from "./validator/transformer";
 
 // Validator
-export { applyTransformers } from './validator/transformer';
-export { validateChain } from './validator/validateChain';
+export { applyTransformers } from "./validator/transformer";
+export { validateChain } from "./validator/validateChain";
 
 // Engine
-export { validateAST } from './engine/validateAST';
+export { validateAST } from "./engine/validateAST";
 
 // Codegen
-export { generateJsonSchema } from './codegen/jsonSchema';
-export { generateOpenApiSchema } from './codegen/openApi';
+export { generateJsonSchema } from "./codegen/jsonSchema";
+export { generateOpenApiSchema } from "./codegen/openApi";
 
 // Analyze
-export { analyzeSchema } from './analyze/analyzeSchema';
+export { analyzeSchema } from "./analyze/analyzeSchema";
 
 // Decorators
-export { getClassAST, Refine, Rule, ValidatedModel } from './decorators/validatedModel';
+export {
+  getClassAST,
+  Refine,
+  Rule,
+  ValidatedModel,
+} from "./decorators/validatedModel";
 
 // Builder
-export { ArrayBuilder, ObjectBuilder, PrimitiveBuilder, v, VBuilder } from './builder';
+export {
+  ArrayBuilder,
+  ObjectBuilder,
+  PrimitiveBuilder,
+  v,
+  VBuilder,
+} from "./builder";
 
 // Top-level validate function for user convenience
-import { v } from './builder';
-import { validateAST } from './engine/validateAST';
+import { v } from "./builder";
+import { validateAST } from "./engine/validateAST";
 
 /**
  * Validate a value against a schema (AST or builder instance).
@@ -43,7 +59,7 @@ import { validateAST } from './engine/validateAST';
  * @returns Validation result
  */
 export async function validate(schema: any, value: any, context: any = {}) {
-  const ast = typeof schema.toAST === 'function' ? schema.toAST() : schema;
+  const ast = typeof schema.toAST === "function" ? schema.toAST() : schema;
   return validateAST(ast, value, context);
 }
 
@@ -56,4 +72,3 @@ export const date = v.date.bind(v);
 export const array = v.array.bind(v);
 export const any = v.any.bind(v);
 export const from = v.from.bind(v);
-

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerTransformer = registerTransformer;
 exports.applyTransformers = applyTransformers;
+exports.getTransformer = getTransformer;
 const transformers = {
     trim: (value) => (typeof value === 'string' ? value.trim() : value),
     lower: (value) => (typeof value === 'string' ? value.toLowerCase() : value),
@@ -23,4 +24,7 @@ function applyTransformers(value, transformerNames) {
         transformedValue = transformerFn(transformedValue);
     }
     return transformedValue;
+}
+function getTransformer(name) {
+    return transformers[name];
 }

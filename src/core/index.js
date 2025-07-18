@@ -21,17 +21,17 @@ Object.defineProperty(exports, "parse", { enumerable: true, get: function () { r
 var definitionRegistry_1 = require("./registry/definitionRegistry");
 Object.defineProperty(exports, "define", { enumerable: true, get: function () { return definitionRegistry_1.define; } });
 Object.defineProperty(exports, "getDefinition", { enumerable: true, get: function () { return definitionRegistry_1.getDefinition; } });
-var ruleRegistry_1 = require("./registry/ruleRegistry");
-Object.defineProperty(exports, "getAsyncRule", { enumerable: true, get: function () { return ruleRegistry_1.getAsyncRule; } });
-Object.defineProperty(exports, "getSyncRule", { enumerable: true, get: function () { return ruleRegistry_1.getSyncRule; } });
-Object.defineProperty(exports, "registerAsyncRule", { enumerable: true, get: function () { return ruleRegistry_1.registerAsyncRule; } });
-Object.defineProperty(exports, "registerSyncRule", { enumerable: true, get: function () { return ruleRegistry_1.registerSyncRule; } });
-var transformerRegistry_1 = require("./registry/transformerRegistry");
-Object.defineProperty(exports, "getTransformer", { enumerable: true, get: function () { return transformerRegistry_1.getTransformer; } });
-Object.defineProperty(exports, "registerTransformer", { enumerable: true, get: function () { return transformerRegistry_1.registerTransformer; } });
-// Validator
+var syncValidator_1 = require("./validator/syncValidator");
+Object.defineProperty(exports, "getAsyncRule", { enumerable: true, get: function () { return syncValidator_1.getAsyncRule; } });
+Object.defineProperty(exports, "getSyncRule", { enumerable: true, get: function () { return syncValidator_1.getSyncRule; } });
+Object.defineProperty(exports, "registerAsyncRule", { enumerable: true, get: function () { return syncValidator_1.registerAsyncRule; } });
+Object.defineProperty(exports, "registerSyncRule", { enumerable: true, get: function () { return syncValidator_1.registerSyncRule; } });
 var transformer_1 = require("./validator/transformer");
-Object.defineProperty(exports, "applyTransformers", { enumerable: true, get: function () { return transformer_1.applyTransformers; } });
+Object.defineProperty(exports, "getTransformer", { enumerable: true, get: function () { return transformer_1.getTransformer; } });
+Object.defineProperty(exports, "registerTransformer", { enumerable: true, get: function () { return transformer_1.registerTransformer; } });
+// Validator
+var transformer_2 = require("./validator/transformer");
+Object.defineProperty(exports, "applyTransformers", { enumerable: true, get: function () { return transformer_2.applyTransformers; } });
 var validateChain_1 = require("./validator/validateChain");
 Object.defineProperty(exports, "validateChain", { enumerable: true, get: function () { return validateChain_1.validateChain; } });
 // Engine

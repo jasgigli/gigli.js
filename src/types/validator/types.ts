@@ -7,6 +7,12 @@ export interface ValidationState {
   context: Record<string, any>;
 }
 
-export type SyncValidator = (state: ValidationState, params: Record<string, string>) => boolean;
-export type AsyncValidator = (state: ValidationState, params: Record<string, string>) => Promise<boolean>;
+export type SyncValidator = (
+  state: ValidationState,
+  params: Record<string, string>,
+) => boolean;
+export type AsyncValidator = (
+  state: ValidationState,
+  params: Record<string, string>,
+) => Promise<boolean>;
 export type Transformer = (value: any) => any;

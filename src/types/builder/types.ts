@@ -1,4 +1,8 @@
-import type { ArrayNode, ObjectNode, PrimitiveNode } from '../../core/ast/nodes';
+import type {
+  ArrayNode,
+  ObjectNode,
+  PrimitiveNode,
+} from "../../core/ast/nodes";
 
 export interface IPrimitiveBuilder {
   min(value: number): IPrimitiveBuilder;
@@ -26,8 +30,12 @@ export interface IVBuilder {
   boolean(): IPrimitiveBuilder;
   date(): IPrimitiveBuilder;
   any(): IPrimitiveBuilder;
-  object(fields: Record<string, IPrimitiveBuilder | IObjectBuilder | IArrayBuilder>): IObjectBuilder;
-  array(element: IPrimitiveBuilder | IObjectBuilder | IArrayBuilder): IArrayBuilder;
+  object(
+    fields: Record<string, IPrimitiveBuilder | IObjectBuilder | IArrayBuilder>,
+  ): IObjectBuilder;
+  array(
+    element: IPrimitiveBuilder | IObjectBuilder | IArrayBuilder,
+  ): IArrayBuilder;
   from(ruleString: string): { toAST(): PrimitiveNode };
 }
 

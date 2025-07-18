@@ -47,38 +47,38 @@ const helpers_1 = require("./helpers");
 function runAnalyze(args) {
     return __awaiter(this, void 0, void 0, function* () {
         const opts = (0, helpers_1.parseArgs)(args);
-        if (!opts['schema']) {
-            console.error('[gigli.js] --schema is required for analyze.');
+        if (!opts["schema"]) {
+            console.error("[gigli.js] --schema is required for analyze.");
             (0, helpers_1.printHelp)();
             process.exit(1);
         }
-        const schemaPath = opts['schema'];
+        const schemaPath = opts["schema"];
         // Efficient: Register ts-node if loading a .ts file
-        if (schemaPath.endsWith('.ts')) {
-            require('ts-node/register');
+        if (schemaPath.endsWith(".ts")) {
+            require("ts-node/register");
         }
         try {
-            const schemaModule = yield Promise.resolve(`${require('path').resolve(schemaPath)}`).then(s => __importStar(require(s)));
+            const schemaModule = yield Promise.resolve(`${require("path").resolve(schemaPath)}`).then(s => __importStar(require(s)));
             const schema = schemaModule.default || schemaModule.schema || schemaModule.UserSchema;
             if (!schema) {
-                console.error('[gigli.js] Could not find a schema export in the file.');
+                console.error("[gigli.js] Could not find a schema export in the file.");
                 process.exit(1);
             }
-            const { analyzeSchema } = yield Promise.resolve().then(() => __importStar(require('../core/analyze/analyzeSchema')));
-            const ast = typeof schema.toAST === 'function' ? schema.toAST() : schema;
+            const { analyzeSchema } = yield Promise.resolve().then(() => __importStar(require("../core/analyze/analyzeSchema")));
+            const ast = typeof schema.toAST === "function" ? schema.toAST() : schema;
             const issues = analyzeSchema(ast);
             if (issues.length === 0) {
-                console.log('No issues found.');
+                console.log("No issues found.");
             }
             else {
-                console.log('Schema analysis report:');
+                console.log("Schema analysis report:");
                 for (const issue of issues) {
-                    console.log(' -', issue);
+                    console.log(" -", issue);
                 }
             }
         }
         catch (e) {
-            console.error('[gigli.js] Failed to load schema:', e);
+            console.error("[gigli.js] Failed to load schema:", e);
             process.exit(1);
         }
     });

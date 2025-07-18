@@ -1,20 +1,22 @@
 // import type { ASTNode } from '../../../types/ast/types';
-import type { ArrayNode, ObjectNode, PrimitiveNode } from '../ast/nodes';
+import type { ArrayNode, ObjectNode, PrimitiveNode } from "../ast/nodes";
 
 function isOptionalField(node: any): boolean {
   return (
-    (node.type === 'primitive' || node.type === 'object' || node.type === 'array') &&
+    (node.type === "primitive" ||
+      node.type === "object" ||
+      node.type === "array") &&
     !!(node as PrimitiveNode | ObjectNode | ArrayNode).optional
   );
 }
 
 export function generateJsonSchema(node: any): any {
-  if (node.type === 'primitive') {
+  if (node.type === "primitive") {
     let type: string = node.primitive;
-    if (type === 'any') type = 'string';
+    if (type === "any") type = "string";
     return { type };
   }
-  if (node.type === 'object') {
+  if (node.type === "object") {
     const properties: Record<string, any> = {};
     const required: string[] = [];
     for (const key in node.fields) {
@@ -22,18 +24,18 @@ export function generateJsonSchema(node: any): any {
       if (!isOptionalField(node.fields[key])) required.push(key);
     }
     return {
-      type: 'object',
+      type: "object",
       properties,
       required: required.length ? required : undefined,
     };
   }
-  if (node.type === 'array') {
+  if (node.type === "array") {
     return {
-      type: 'array',
+      type: "array",
       items: generateJsonSchema(node.element),
     };
   }
-  if (node.type === 'class') {
+  if (node.type === "class") {
     // Treat class like object for JSON Schema
     const properties: Record<string, any> = {};
     const required: string[] = [];
@@ -42,18 +44,18 @@ export function generateJsonSchema(node: any): any {
       if (!isOptionalField(node.fields[key])) required.push(key);
     }
     return {
-      type: 'object',
+      type: "object",
       properties,
       required: required.length ? required : undefined,
     };
   }
-  if (node.type === 'pipeline') {
+  if (node.type === "pipeline") {
     // Output the schema for the first validate step, or a generic object
-    const validateStep = node.steps.find((s: any) => s.type === 'validate');
+    const validateStep = node.steps.find((s: any) => s.type === "validate");
     if (validateStep && validateStep.schema) {
       return generateJsonSchema(validateStep.schema);
     }
-    return { type: 'object' };
+    return { type: "object" };
   }
   return {};
 }

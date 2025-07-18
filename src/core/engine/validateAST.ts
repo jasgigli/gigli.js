@@ -1,15 +1,19 @@
-import { getTransformer } from '../../core/registry/transformerRegistry';
-import { getAsyncRule } from '../../core/validator/asyncValidator';
-import { getSyncRule } from '../../core/validator/syncValidator';
-import type { ValidationTraceResult } from '../../types/engine/types';
+import { getTransformer } from "../../core/registry/transformerRegistry";
+import { getAsyncRule } from "../../core/validator/asyncValidator";
+import { getSyncRule } from "../../core/validator/syncValidator";
+import type { ValidationTraceResult } from "../../types/engine/types";
 
-export async function validateAST(node: any, value: any, context: any = {}): Promise<ValidationTraceResult> {
+export async function validateAST(
+  node: any,
+  value: any,
+  context: any = {},
+): Promise<ValidationTraceResult> {
   const trace: any[] = [];
   let valid = true;
   let errors: string[] = [];
   let currentValue = value;
 
-  if (node.type === 'primitive') {
+  if (node.type === "primitive") {
     // Apply transformers
     if (node.transformers) {
       for (const t of node.transformers) {
@@ -17,9 +21,17 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
         const fn = getTransformer(t.name);
         if (fn) {
           currentValue = fn(currentValue, t.params);
-          trace.push({ node: t, valueBefore: before, valueAfter: currentValue });
+          trace.push({
+            node: t,
+            valueBefore: before,
+            valueAfter: currentValue,
+          });
         } else {
-          trace.push({ node: t, valueBefore: before, error: `Unknown transformer: ${t.name}` });
+          trace.push({
+            node: t,
+            valueBefore: before,
+            error: `Unknown transformer: ${t.name}`,
+          });
         }
       }
     }
@@ -31,23 +43,47 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
         const asyncFn = getAsyncRule(r.name);
         let result = false;
         if (syncFn) {
-          const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+          const state = {
+            key: "",
+            value: currentValue,
+            data: { value: currentValue },
+            context,
+          };
           result = syncFn(state, r.params);
-          trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
+          trace.push({
+            node: r,
+            valueBefore: before,
+            ruleApplied: r.name,
+            result,
+          });
           if (!result) {
             valid = false;
             errors.push(r.message || `Failed rule: ${r.name}`);
           }
         } else if (asyncFn) {
-          const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+          const state = {
+            key: "",
+            value: currentValue,
+            data: { value: currentValue },
+            context,
+          };
           result = await asyncFn(state, r.params);
-          trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
+          trace.push({
+            node: r,
+            valueBefore: before,
+            ruleApplied: r.name,
+            result,
+          });
           if (!result) {
             valid = false;
             errors.push(r.message || `Failed rule: ${r.name}`);
           }
         } else {
-          trace.push({ node: r, valueBefore: before, error: `Unknown rule: ${r.name}` });
+          trace.push({
+            node: r,
+            valueBefore: before,
+            error: `Unknown rule: ${r.name}`,
+          });
           valid = false;
           errors.push(`Unknown rule: ${r.name}`);
         }
@@ -56,7 +92,7 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     return { valid, value: currentValue, errors, trace };
   }
 
-  if (node.type === 'object') {
+  if (node.type === "object") {
     const out: Record<string, any> = {};
     for (const key in node.fields) {
       const fieldNode = node.fields[key];
@@ -72,11 +108,11 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     return { valid, value: out, errors, trace };
   }
 
-  if (node.type === 'array') {
+  if (node.type === "array") {
     if (!Array.isArray(value)) {
       valid = false;
-      errors.push('Value is not an array');
-      trace.push({ node, valueBefore: value, error: 'Value is not an array' });
+      errors.push("Value is not an array");
+      trace.push({ node, valueBefore: value, error: "Value is not an array" });
       return { valid, value, errors, trace };
     }
     const out: any[] = [];
@@ -92,7 +128,7 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     return { valid, value: out, errors, trace };
   }
 
-  if (node.type === 'pipeline') {
+  if (node.type === "pipeline") {
     let pipelineValue = value;
     let pipelineValid = true;
     let pipelineErrors: string[] = [];
@@ -101,25 +137,33 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     let effectStep: any = null;
     let effectTrace: any = null;
     for (const step of node.steps) {
-      if (step.type === 'transform') {
+      if (step.type === "transform") {
         const before = pipelineValue;
         let after = pipelineValue;
-        if (typeof step.fn === 'function') {
+        if (typeof step.fn === "function") {
           after = step.fn(pipelineValue);
-        } else if (step.fn && step.fn.type === 'transformer') {
+        } else if (step.fn && step.fn.type === "transformer") {
           const fn = getTransformer(step.fn.name);
           if (fn) {
             after = fn(pipelineValue, step.fn.params);
           } else {
             pipelineErrors.push(`Unknown transformer: ${step.fn.name}`);
-            pipelineTrace.push({ node: step.fn, valueBefore: before, error: `Unknown transformer: ${step.fn.name}` });
+            pipelineTrace.push({
+              node: step.fn,
+              valueBefore: before,
+              error: `Unknown transformer: ${step.fn.name}`,
+            });
             pipelineValid = false;
             continue;
           }
         }
-        pipelineTrace.push({ node: step, valueBefore: before, valueAfter: after });
+        pipelineTrace.push({
+          node: step,
+          valueBefore: before,
+          valueAfter: after,
+        });
         pipelineValue = after;
-      } else if (step.type === 'validate') {
+      } else if (step.type === "validate") {
         const res = await validateAST(step.schema, pipelineValue, context);
         pipelineTrace.push(...res.trace);
         pipelineValue = res.value;
@@ -127,15 +171,20 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
           pipelineValid = false;
           pipelineErrors.push(...res.errors);
         }
-      } else if (step.type === 'refine') {
+      } else if (step.type === "refine") {
         const before = pipelineValue;
         const result = step.fn(pipelineValue);
-        pipelineTrace.push({ node: step, valueBefore: before, ruleApplied: 'refine', result });
+        pipelineTrace.push({
+          node: step,
+          valueBefore: before,
+          ruleApplied: "refine",
+          result,
+        });
         if (!result) {
           pipelineValid = false;
-          pipelineErrors.push(step.message || 'Refinement failed');
+          pipelineErrors.push(step.message || "Refinement failed");
         }
-      } else if (step.type === 'dispatch') {
+      } else if (step.type === "dispatch") {
         // Implement dispatch logic
         const fieldValue = pipelineValue[step.field];
         const schema = step.cases[fieldValue];
@@ -149,11 +198,15 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
           }
           dispatchMatched = true;
         } else {
-          pipelineTrace.push({ node: step, valueBefore: pipelineValue, error: `No dispatch case for value: ${fieldValue}` });
+          pipelineTrace.push({
+            node: step,
+            valueBefore: pipelineValue,
+            error: `No dispatch case for value: ${fieldValue}`,
+          });
           pipelineValid = false;
           pipelineErrors.push(`No dispatch case for value: ${fieldValue}`);
         }
-      } else if (step.type === 'effect') {
+      } else if (step.type === "effect") {
         // Store effect step for after pipeline execution
         effectStep = step;
       }
@@ -163,14 +216,24 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
       effectTrace = { node: effectStep, valueBefore: pipelineValue };
       if (pipelineValid && effectStep.onSuccess) {
         try {
-          effectStep.onSuccess({ input: value, output: pipelineValue, errors: pipelineErrors, trace: pipelineTrace });
+          effectStep.onSuccess({
+            input: value,
+            output: pipelineValue,
+            errors: pipelineErrors,
+            trace: pipelineTrace,
+          });
           effectTrace.valueAfter = pipelineValue;
         } catch (e) {
           effectTrace.error = `Effect onSuccess error: ${e}`;
         }
       } else if (!pipelineValid && effectStep.onFailure) {
         try {
-          effectStep.onFailure({ input: value, output: pipelineValue, errors: pipelineErrors, trace: pipelineTrace });
+          effectStep.onFailure({
+            input: value,
+            output: pipelineValue,
+            errors: pipelineErrors,
+            trace: pipelineTrace,
+          });
           effectTrace.valueAfter = pipelineValue;
         } catch (e) {
           effectTrace.error = `Effect onFailure error: ${e}`;
@@ -178,10 +241,15 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
       }
       pipelineTrace.push(effectTrace);
     }
-    return { valid: pipelineValid, value: pipelineValue, errors: pipelineErrors, trace: pipelineTrace };
+    return {
+      valid: pipelineValid,
+      value: pipelineValue,
+      errors: pipelineErrors,
+      trace: pipelineTrace,
+    };
   }
 
-  if (node.type === 'class') {
+  if (node.type === "class") {
     const out: Record<string, any> = {};
     let classValid = true;
     let classErrors: string[] = [];
@@ -201,15 +269,34 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     if (node.refinements) {
       for (const refine of node.refinements) {
         const result = refine.fn(out);
-        classTrace.push({ node: refine, valueBefore: out, ruleApplied: 'refine', result });
+        classTrace.push({
+          node: refine,
+          valueBefore: out,
+          ruleApplied: "refine",
+          result,
+        });
         if (!result) {
           classValid = false;
-          classErrors.push(refine.message || 'Class refinement failed');
+          classErrors.push(refine.message || "Class refinement failed");
         }
       }
     }
-    return { valid: classValid, value: out, errors: classErrors, trace: classTrace };
+    return {
+      valid: classValid,
+      value: out,
+      errors: classErrors,
+      trace: classTrace,
+    };
   }
-  trace.push({ node, valueBefore: value, error: `Unsupported node type: ${node.type}` });
-  return { valid: false, value, errors: [`Unsupported node type: ${node.type}`], trace };
+  trace.push({
+    node,
+    valueBefore: value,
+    error: `Unsupported node type: ${node.type}`,
+  });
+  return {
+    valid: false,
+    value,
+    errors: [`Unsupported node type: ${node.type}`],
+    trace,
+  };
 }

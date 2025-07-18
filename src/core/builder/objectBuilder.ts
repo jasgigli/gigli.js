@@ -1,13 +1,16 @@
-import type { IObjectBuilder } from '../../types/builder/types';
-import type { ObjectNode } from '../ast/nodes';
+import type { IObjectBuilder } from "../../types/builder/types";
+import type { ObjectNode } from "../ast/nodes";
 
 export class ObjectBuilder implements IObjectBuilder {
   private node: ObjectNode;
   constructor(fields: Record<string, any>) {
     this.node = {
-      type: 'object',
+      type: "object",
       fields: Object.fromEntries(
-        Object.entries(fields).map(([k, v]) => [k, typeof v.toAST === 'function' ? v.toAST() : v])
+        Object.entries(fields).map(([k, v]) => [
+          k,
+          typeof v.toAST === "function" ? v.toAST() : v,
+        ]),
       ),
     };
   }
