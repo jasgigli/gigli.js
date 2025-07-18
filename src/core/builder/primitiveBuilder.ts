@@ -1,10 +1,10 @@
-import type { PrimitiveType } from '../../../types/ast/types';
+// import type { PrimitiveType } from '../../../types/ast/types';
 import type { PrimitiveNode } from '../ast/nodes';
 
 export class PrimitiveBuilder {
   private node: PrimitiveNode;
-  constructor(type: PrimitiveType) {
-    this.node = { type: 'primitive', primitive: type };
+  constructor(type: string) {
+    this.node = { type: 'primitive', primitive: type as any };
   }
   min(value: number) {
     this.addRule('min', { value });

@@ -1,32 +1,77 @@
 {
   "name": "validex",
-  "version": "1.0.0",
-  "main": "src/index.js",
-  "types": "src/index.ts",
-  "scripts": {
-    "test": "jest",
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+  "version": "4.0.0",
+  "description": "The metamorphic, type-safe validation engine for TypeScript. A single, unified runtime that combines the best of Zod, Yup, and class-validator with unparalleled portability and power.",
+  "author": "Junaid Ali Shah Gigli",
+  "license": "MIT",
+  "homepage": "https://github.com/jasgigli/validex#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasgigli/validex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jasgigli/validex/issues"
+  },
+  "keywords": [
+    "validex",
+    "validation",
+    "validator",
+    "typescript",
+    "zod",
+    "yup",
+    "joi",
+    "class-validator",
+    "schema",
+    "typesafe",
+    "inference",
+    "decorators",
+    "nestjs",
+    "trpc",
+    "express",
+    "react",
+    "form",
+    "chainable",
+    "declarative",
+    "isomorphic",
+    "metamorphic"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "files": [
     "dist"
   ],
-  "keywords": [
-    "validation",
-    "validator",
-    "language",
-    "regex",
-    "declarative"
-  ],
-  "author": "Junaid Ali Shah Gigli",
-  "license": "MIT",
-  "description": "",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc && tsc -p tsconfig.cjs.json",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "test": "jest",
+    "prepublishOnly": "npm test && npm run build",
+    "release": "npm run prepublishOnly && npm publish"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@types/node": "^24.0.14",
-    "jest": "^29.0.0",
-    "ts-jest": "^29.4.0",
+    "@types/node": "^20.14.9",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.2",
+    "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.4.5",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1"
   }
 }
