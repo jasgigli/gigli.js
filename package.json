@@ -49,7 +49,7 @@
     }
   },
   "bin": {
-    "validex": "./dist/cli/index.js"
+    "gigli": "./dist/cli/index.js"
   },
   "files": [
     "dist"

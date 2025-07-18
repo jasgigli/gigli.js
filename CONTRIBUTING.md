@@ -1,6 +1,6 @@
-# Contributing to validex
+# Contributing to gigli.js
 
-Thank you for considering contributing to validex! Your help is greatly appreciated.
+Thank you for considering contributing to gigli.js! Your help is greatly appreciated.
 
 ## How to Contribute
 
@@ -12,7 +12,7 @@ Thank you for considering contributing to validex! Your help is greatly apprecia
 
 ## Development Setup
 
-- Clone your fork: `git clone https://github.com/your-username/validex.git`
+- Clone your fork: `git clone https://github.com/your-username/gigli.js.git`
 - Install dependencies: `npm install`
 - Build the project: `tsc`
 - Run tests: `npm test`
@@ -46,4 +46,4 @@ Thank you for considering contributing to validex! Your help is greatly apprecia
 
 - Be respectful and follow our [Code of Conduct](CODE_OF_CONDUCT.md)
 
-Thank you for helping make validex better!
+Thank you for helping make gigli.js better!

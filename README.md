@@ -1,15 +1,15 @@
 
 <!-- <div align="center">
-  <img src="https://raw.githubusercontent.com/jasgigli/validex/main/assets/validex-logo.png" alt="Validex Logo" width="150"> -->
-  <h1>Validex</h1>
+  <img src="https://raw.githubusercontent.com/jasgigli/gigli.js/main/assets/gigli.js-logo.png" alt="Gigli.js Logo" width="150"> -->
+  <h1>Gigli.js</h1>
   <p><strong>The Metamorphic, Type-Safe Validation Engine for TypeScript.</strong></p>
   <p>Define schemas once. Use them everywhere. Unify the best of Zod, Yup, and class-validator with a single, powerful, and portable runtime.</p>
 
   <p>
-    <a href="https://www.npmjs.com/package/validex"><img src="https://img.shields.io/npm/v/validex.svg?style=flat-square" alt="NPM Version"></a>
-    <a href="https://github.com/your-username/validex/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jasgigli/validex/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
-    <a href="https://www.npmjs.com/package/validex"><img src="https://img.shields.io/npm/dt/validex.svg?style=flat-square" alt="NPM Downloads"></a>
-    <a href="https://github.com/jasgigli/validex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/validex.svg?style=flat-square" alt="License"></a>
+    <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/v/gigli.js.svg?style=flat-square" alt="NPM Version"></a>
+    <a href="https://github.com/your-username/gigli.js/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jasgigli/gigli.js/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
+    <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/dt/gigli.js.svg?style=flat-square" alt="NPM Downloads"></a>
+    <a href="https://github.com/jasgigli/gigli.js/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gigli.js.svg?style=flat-square" alt="License"></a>
   </p>
 </div>
 
@@ -17,13 +17,13 @@
 
 Writing validation is a solved problem. Writing it in a way that is **type-safe, portable, declarative, and easy to debug** is not. Until now.
 
-Validex isn't just another validator. It's a **metamorphic engine**, designed to adapt to your preferred coding style without sacrificing power or type safety.
+Gigli.js isn't just another validator. It's a **metamorphic engine**, designed to adapt to your preferred coding style without sacrificing power or type safety.
 
-## The Validex Difference
+## The Gigli.js Difference
 
-Why choose Validex? Because you no longer have to choose.
+Why choose Gigli.js? Because you no longer have to choose.
 
-| Feature | Zod | Yup | class-validator | **Validex** |
+| Feature | Zod | Yup | class-validator | **Gigli.js** |
 | :--- | :---: | :---: | :---: | :---: |
 | ✅ **Type Inference** | ✅ | ❌ | ✅ | ✅ |
 | ✅ **Chainable Schema Builder** | ✅ | ✅ | ❌ | ✅ |
@@ -39,11 +39,11 @@ Why choose Validex? Because you no longer have to choose.
 Get up and running in less than a minute.
 
 ```bash
-npm install validex
+npm install gigli.js
 ```
 
 ```typescript
-import { v } from 'validex';
+import { v } from 'gigli.js';
 
 // 1. Define a schema with a fluent, Zod-like API
 const UserSchema = v.object({
@@ -72,7 +72,7 @@ try {
 
 ## Choose Your Style: The 3 APIs
 
-Validex's core strength is its **Unified Runtime**. Define rules in any style, and they'll all work together seamlessly.
+Gigli.js's core strength is its **Unified Runtime**. Define rules in any style, and they'll all work together seamlessly.
 
 <details>
   <summary><strong>1. The Schema Builder API (for Zod & Yup lovers)</strong></summary>
@@ -80,7 +80,7 @@ Validex's core strength is its **Unified Runtime**. Define rules in any style, a
   Build complex, type-safe schemas with a fluent, chainable API. This is the recommended approach for most use cases.
 
   ```typescript
-  import { v } from 'validex';
+  import { v } from 'gigli.js';
 
   const PostSchema = v.object({
     id: v.string().uuid(),
@@ -97,7 +97,7 @@ Validex's core strength is its **Unified Runtime**. Define rules in any style, a
   Add validation directly to your classes for a clean, declarative, and object-oriented approach.
 
   ```typescript
-  import { v, ValidatedModel } from 'validex';
+  import { v, ValidatedModel } from 'gigli.js';
 
   // Cross-field validation at the class level
   @v.Refine((dto) => dto.password === dto.passwordConfirm, {
@@ -155,7 +155,7 @@ Validex's core strength is its **Unified Runtime**. Define rules in any style, a
 
 ### 🔍 Validation Trace™
 
-Stop guessing why validation failed. Every error in Validex is packed with a detailed trace, showing you the input, the transformers, and the exact rule that broke.
+Stop guessing why validation failed. Every error in Gigli.js is packed with a detailed trace, showing you the input, the transformers, and the exact rule that broke.
 
 ```json
 {
@@ -169,16 +169,16 @@ Stop guessing why validation failed. Every error in Validex is packed with a det
 }
 ```
 
-### ⚙️ The Validex CLI
+### ⚙️ The Gigli.js CLI
 
 Bring your validation schemas into your development workflow.
 
 ```bash
 # Generate OpenAPI v3 specifications from your schemas
-npx validex codegen --schema ./src/schemas.ts --target openapi
+npx gigli codegen --schema ./src/schemas.ts --target openapi
 
 # Statically analyze schemas for impossible rules or performance issues
-npx validex analyze --schema ./src/schemas.ts
+npx gigli analyze --schema ./src/schemas.ts
 ```
 
 ## Usage
@@ -186,7 +186,7 @@ npx validex analyze --schema ./src/schemas.ts
 ### As a Library
 
 ```ts
-import { validate, object, string } from 'validex';
+import { validate, object, string } from 'gigli.js';
 
 const userSchema = object({
   name: string(),
@@ -202,38 +202,38 @@ console.log(result);
 You can use the CLI directly with npx (no install required):
 
 ```sh
-npx validex codegen --schema ./path/to/schema.ts --target openapi
-npx validex codegen --schema ./path/to/schema.ts --target jsonschema
-npx validex analyze --schema ./path/to/schema.ts
+npx gigli codegen --schema ./path/to/schema.ts --target openapi
+npx gigli codegen --schema ./path/to/schema.ts --target jsonschema
+npx gigli analyze --schema ./path/to/schema.ts
 ```
 
 For help:
 
 ```sh
-npx validex --help
+npx gigli --help
 ```
 
 ## Extensibility is Key
 
-Validex is built to be extended.
+Gigli.js is built to be extended.
 - **`v.registerRule()`**: Add your own custom validation logic (sync or async).
 - **`v.registerTransformer()`**: Create reusable data sanitizers.
 - **`v.define()`**: Define complex rule strings as aliases (e.g., `v.define('slug', 'string:min=3|regex:...')`).
 
 ## Use It Everywhere
 
-Thanks to its zero-dependency core and hybrid module output, Validex works seamlessly across the entire JavaScript ecosystem.
+Thanks to its zero-dependency core and hybrid module output, Gigli.js works seamlessly across the entire JavaScript ecosystem.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/your-username/validex/main/assets/ecosystem.png" alt="Ecosystem logos: React, Vue, Svelte, Node.js, NestJS, Express, tRPC, Deno, Bun, Cloudflare">
+  <img src="https://raw.githubusercontent.com/your-username/gigli.js/main/assets/ecosystem.png" alt="Ecosystem logos: React, Vue, Svelte, Node.js, NestJS, Express, tRPC, Deno, Bun, Cloudflare">
 </div>
 
 ---
 
 ## Contributing
 
-We are building the future of data validation, and we'd love your help. Please read our **[CONTRIBUTING.md](https://github.com/your-username/validex/blob/main/CONTRIBUTING.md)** to get started. Whether it's a bug report, a new feature, or a documentation improvement, all contributions are welcome!
+We are building the future of data validation, and we'd love your help. Please read our **[CONTRIBUTING.md](https://github.com/your-username/gigli.js/blob/main/CONTRIBUTING.md)** to get started. Whether it's a bug report, a new feature, or a documentation improvement, all contributions are welcome!
 
 ## License
 
-Validex is open-source software licensed under the **[MIT License](https://github.com/your-username/validex/blob/main/LICENSE)**.
+Gigli.js is open-source software licensed under the **[MIT License](https://github.com/your-username/gigli.js/blob/main/LICENSE)**.
