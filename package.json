@@ -1,6 +1,6 @@
 {
   "name": "gigli.js",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Gigli.js: A modular, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. First official release.",
   "author": "Junaid Ali Shah Gigli",
   "license": "MIT",
