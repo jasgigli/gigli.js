@@ -1,5 +1,6 @@
 import { validateAST } from '../src/core/engine/validateAST';
-import { registerAsyncRule, registerSyncRule } from '../src/core/validator/syncValidator';
+import { registerAsyncRule } from '../src/core/validator/asyncValidator';
+import { registerSyncRule } from '../src/core/validator/syncValidator';
 import { registerTransformer } from '../src/core/validator/transformer';
 
 describe('Async and Custom Rules/Transformers', () => {
