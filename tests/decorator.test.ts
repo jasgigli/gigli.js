@@ -7,10 +7,10 @@ describe('Decorator API', () => {
       @Rule({ toAST: () => ({ type: 'primitive', primitive: 'string', rules: [{ type: 'rule', name: 'string', params: { min: 3 } }] }) })
       username!: string;
     }
-    // Use from() and expect error for invalid input
-    const user = User.from({ username: 'abc' });
+    // Use fromAsync() and expect error for invalid input
+    const user = await User.fromAsync({ username: 'abc' });
     expect(user.username).toBe('abc');
-    expect(() => User.from({ username: 'ab' })).toThrow();
+    await expect(User.fromAsync({ username: 'ab' })).rejects.toThrow();
   });
 
   it('should validate with class-level refinement', async () => {
@@ -24,8 +24,8 @@ describe('Decorator API', () => {
       @Rule({ toAST: () => ({ type: 'primitive', primitive: 'string', rules: [{ type: 'rule', name: 'string', params: { min: 8 } }] }) })
       passwordConfirm!: string;
     }
-    expect(() => CreateUser.from({ password: 'abcdefgh', passwordConfirm: 'abcdefgh' })).not.toThrow();
-    expect(() => CreateUser.from({ password: 'abcdefgh', passwordConfirm: 'abcdxxxx' })).toThrow(/Passwords do not match/);
+    await expect(CreateUser.fromAsync({ password: 'abcdefgh', passwordConfirm: 'abcdefgh' })).resolves.not.toThrow();
+    await expect(CreateUser.fromAsync({ password: 'abcdefgh', passwordConfirm: 'abcdxxxx' })).rejects.toThrow(/Passwords do not match/);
   });
 
   it('should generate correct AST from class', () => {

@@ -11,6 +11,9 @@ describe('Async and Custom Rules/Transformers', () => {
     registerAsyncRule('isEvenAsync', async (state) => typeof state.value === 'number' && state.value % 2 === 0);
     // Register a custom transformer
     registerTransformer('reverse', (value) => typeof value === 'string' ? value.split('').reverse().join('') : value);
+    // Debug output
+    // eslint-disable-next-line no-console
+    console.log('Custom rules and transformers registered for async_custom.test.ts');
   });
 
   it('should validate with a custom sync rule', async () => {

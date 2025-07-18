@@ -61,15 +61,17 @@ registerSyncRule(
 );
 // Add min/max rules for both string and number
 registerSyncRule("min", (state: any, p: any) => {
+  const minValue = p.min !== undefined ? p.min : p.value;
   if (typeof state.value === "string")
-    return state.value.length >= Number(p.value);
-  if (typeof state.value === "number") return state.value >= Number(p.value);
+    return state.value.length >= Number(minValue);
+  if (typeof state.value === "number") return state.value >= Number(minValue);
   return false;
 });
 registerSyncRule("max", (state: any, p: any) => {
+  const maxValue = p.max !== undefined ? p.max : p.value;
   if (typeof state.value === "string")
-    return state.value.length <= Number(p.value);
-  if (typeof state.value === "number") return state.value <= Number(p.value);
+    return state.value.length <= Number(maxValue);
+  if (typeof state.value === "number") return state.value <= Number(maxValue);
   return false;
 });
 
@@ -78,3 +80,4 @@ export function getSyncRule(name: string): SyncValidator | undefined {
 }
 
 export { getAsyncRule, registerAsyncRule } from "./asyncValidator";
+
