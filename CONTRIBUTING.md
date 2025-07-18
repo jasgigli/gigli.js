@@ -1,0 +1,47 @@
+# Contributing to validex
+
+Thank you for considering contributing to validex! Your help is greatly appreciated.
+
+## How to Contribute
+
+1. **Fork the repository**
+2. **Create a new branch** for your feature or bugfix
+3. **Write your code** and add tests
+4. **Run tests** to make sure everything works: `npm test`
+5. **Submit a pull request** with a clear description of your changes
+
+## Development Setup
+
+- Clone your fork: `git clone https://github.com/your-username/validex.git`
+- Install dependencies: `npm install`
+- Build the project: `tsc`
+- Run tests: `npm test`
+
+## Project Structure
+
+- `src/` — Source code
+- `tests/` — Test files
+- `.github/` — GitHub workflows and templates
+
+## Coding Standards
+
+- Use TypeScript for all new code
+- Write clear, concise, and well-documented code
+- Add or update tests for any changes
+
+## Pull Requests
+
+- Keep PRs focused and small
+- Reference related issues in your PR description
+- Ensure all tests pass before submitting
+
+## Reporting Issues
+
+- Use the GitHub Issues tab to report bugs or request features
+- Provide as much detail as possible
+
+## Community
+
+- Be respectful and follow our [Code of Conduct](CODE_OF_CONDUCT.md)
+
+Thank you for helping make validex better!
