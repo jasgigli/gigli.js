@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import type { ASTNode, ClassNode } from '../ast/nodes';
+import type { ClassNode } from '../ast/nodes';
+import { validateAST } from '../engine/validateAST';
 
 const RULES_KEY = Symbol('validex:rules');
 const REFINES_KEY = Symbol('validex:refines');
@@ -30,22 +31,24 @@ export class ValidatedModel {
   }
 
   validate() {
-    // Placeholder: In a full implementation, compile metadata to AST and validate
-    // For now, just check that required fields are present
-    const rules = (Reflect as any).getMetadata(RULES_KEY, this) || {};
-    for (const key in rules) {
-      if (this[key] === undefined) {
-        throw new Error(`Missing required field: ${key}`);
+    // Enhanced: Compile metadata to AST and validate using validateAST
+    const ast = getClassAST(this.constructor);
+    let result: any;
+    (async () => {
+      result = await validateAST(ast, this);
+      if (!result.valid) {
+        const errorMsg = result.errors && result.errors.length > 0 ? result.errors.join('; ') : 'Validation failed';
+        throw new Error(errorMsg);
       }
-    }
-    // TODO: Compile to AST and use validateAST for full validation
+    })();
+    return result;
   }
 }
 
 export function getClassAST(target: any): ClassNode {
   const rules = (Reflect as any).getMetadata(RULES_KEY, target.prototype) || {};
   const refines = (Reflect as any).getMetadata(REFINES_KEY, target) || [];
-  const fields: Record<string, ASTNode> = {};
+  const fields: Record<string, any> = {};
   for (const key in rules) {
     const rule = rules[key];
     fields[key] = typeof rule.toAST === 'function' ? rule.toAST() : rule;
