@@ -319,3 +319,11 @@ import { v } from 'gigli.js';
 - `schema.parse(data)` — Returns parsed data or throws on error.
 
 Both methods are **async** and must be awaited.
+
+---
+
+## Connect with the Author
+
+- GitHub: [https://github.com/jasgigli/gigli.js](https://github.com/jasgigli/gigli.js)
+- Twitter: [@jasgiigli](https://x.com/jasgiigli)
+- LinkedIn: [jasgigli](https://www.linkedin.com/in/jasgigli/)
