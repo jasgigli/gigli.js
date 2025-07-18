@@ -1,7 +1,7 @@
 import type { ParsedRule } from "../../types/parser/types";
 import type { ValidationState } from "../../types/validator/types";
+import { getSyncRule } from '../registry/ruleRegistry';
 import { getAsyncRule } from "./asyncValidator";
-import { getSyncRule } from "./syncValidator";
 
 export async function validateChain(
   state: ValidationState,

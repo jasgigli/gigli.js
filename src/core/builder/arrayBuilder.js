@@ -4,8 +4,8 @@ exports.ArrayBuilder = void 0;
 class ArrayBuilder {
     constructor(element) {
         this.node = {
-            type: 'array',
-            element: typeof element.toAST === 'function' ? element.toAST() : element,
+            type: "array",
+            element: typeof element.toAST === "function" ? element.toAST() : element,
         };
     }
     optional() {

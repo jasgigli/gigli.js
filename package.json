@@ -1,7 +1,7 @@
 {
   "name": "gigli.js",
   "version": "1.0.0",
-  "description": "Validex: A modular, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. First official release.",
+  "description": "Gigli.js: A modular, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. First official release.",
   "author": "Junaid Ali Shah Gigli",
   "license": "MIT",
   "homepage": "https://github.com/jasgigli/gigli.js#readme",
@@ -38,15 +38,12 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
   },
   "bin": {
     "gigli": "./dist/cli/index.js"
@@ -56,7 +53,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc && tsc -p tsconfig.cjs.json",
+    "build": "tsup",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "test": "jest",
@@ -78,5 +75,9 @@
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "gigli.js": "^1.0.0",
+    "tsup": "^8.5.0"
   }
 }

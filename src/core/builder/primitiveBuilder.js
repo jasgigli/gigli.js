@@ -3,18 +3,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrimitiveBuilder = void 0;
 class PrimitiveBuilder {
     constructor(type) {
-        this.node = { type: 'primitive', primitive: type };
+        this.node = { type: "primitive", primitive: type };
     }
     min(value) {
-        this.addRule('min', { value });
+        if (this.node.primitive === 'string' || this.node.primitive === 'number') {
+            this.addRule(this.node.primitive, { min: value });
+        }
+        else {
+            this.addRule('min', { value });
+        }
         return this;
     }
     max(value) {
-        this.addRule('max', { value });
+        if (this.node.primitive === 'string' || this.node.primitive === 'number') {
+            this.addRule(this.node.primitive, { max: value });
+        }
+        else {
+            this.addRule('max', { value });
+        }
         return this;
     }
     email() {
-        this.addRule('email');
+        this.addRule("email");
         return this;
     }
     optional() {
@@ -24,7 +34,7 @@ class PrimitiveBuilder {
     transform(name, params) {
         if (!this.node.transformers)
             this.node.transformers = [];
-        this.node.transformers.push({ type: 'transformer', name, params });
+        this.node.transformers.push({ type: "transformer", name, params });
         return this;
     }
     rule(name, params) {
@@ -34,7 +44,7 @@ class PrimitiveBuilder {
     addRule(name, params) {
         if (!this.node.rules)
             this.node.rules = [];
-        this.node.rules.push({ type: 'rule', name, params });
+        this.node.rules.push({ type: "rule", name, params });
     }
     toAST() {
         return this.node;

@@ -70,7 +70,7 @@ const validateAST_2 = require("./engine/validateAST");
  */
 function validate(schema_1, value_1) {
     return __awaiter(this, arguments, void 0, function* (schema, value, context = {}) {
-        const ast = typeof schema.toAST === 'function' ? schema.toAST() : schema;
+        const ast = typeof schema.toAST === "function" ? schema.toAST() : schema;
         return (0, validateAST_2.validateAST)(ast, value, context);
     });
 }

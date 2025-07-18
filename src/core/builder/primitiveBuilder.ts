@@ -8,11 +8,19 @@ export class PrimitiveBuilder implements IPrimitiveBuilder {
     this.node = { type: "primitive", primitive: type as any };
   }
   min(value: number) {
-    this.addRule("min", { value });
+    if (this.node.primitive === 'string' || this.node.primitive === 'number') {
+      this.addRule(this.node.primitive, { min: value });
+    } else {
+      this.addRule('min', { value });
+    }
     return this;
   }
   max(value: number) {
-    this.addRule("max", { value });
+    if (this.node.primitive === 'string' || this.node.primitive === 'number') {
+      this.addRule(this.node.primitive, { max: value });
+    } else {
+      this.addRule('max', { value });
+    }
     return this;
   }
   email() {

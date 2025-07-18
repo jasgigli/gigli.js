@@ -10,19 +10,19 @@ const primitiveBuilder_1 = require("./primitiveBuilder");
 Object.defineProperty(exports, "PrimitiveBuilder", { enumerable: true, get: function () { return primitiveBuilder_1.PrimitiveBuilder; } });
 class VBuilder {
     string() {
-        return new primitiveBuilder_1.PrimitiveBuilder('string');
+        return new primitiveBuilder_1.PrimitiveBuilder("string");
     }
     number() {
-        return new primitiveBuilder_1.PrimitiveBuilder('number');
+        return new primitiveBuilder_1.PrimitiveBuilder("number");
     }
     boolean() {
-        return new primitiveBuilder_1.PrimitiveBuilder('boolean');
+        return new primitiveBuilder_1.PrimitiveBuilder("boolean");
     }
     date() {
-        return new primitiveBuilder_1.PrimitiveBuilder('date');
+        return new primitiveBuilder_1.PrimitiveBuilder("date");
     }
     any() {
-        return new primitiveBuilder_1.PrimitiveBuilder('any');
+        return new primitiveBuilder_1.PrimitiveBuilder("any");
     }
     object(fields) {
         return new objectBuilder_1.ObjectBuilder(fields);
@@ -33,11 +33,14 @@ class VBuilder {
     from(ruleString) {
         const parsed = (0, ruleParser_1.parse)(ruleString);
         const node = {
-            type: 'primitive',
-            primitive: 'any',
-            transformers: parsed.transformers.map((name) => ({ type: 'transformer', name })),
+            type: "primitive",
+            primitive: "any",
+            transformers: parsed.transformers.map((name) => ({
+                type: "transformer",
+                name,
+            })),
             rules: parsed.rules.map((r) => ({
-                type: 'rule',
+                type: "rule",
                 name: r.rule,
                 params: r.params,
                 message: r.customMessage,

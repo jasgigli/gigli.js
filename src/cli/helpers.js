@@ -8,8 +8,8 @@ function printHelp() {
 function parseArgs(args) {
     const out = {};
     for (let i = 0; i < args.length; i++) {
-        if (args[i].startsWith('--')) {
-            out[args[i].replace(/^--/, '')] = args[i + 1];
+        if (args[i].startsWith("--")) {
+            out[args[i].replace(/^--/, "")] = args[i + 1];
             i++;
         }
     }

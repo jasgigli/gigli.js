@@ -10,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateChain = validateChain;
+const ruleRegistry_1 = require("../registry/ruleRegistry");
 const asyncValidator_1 = require("./asyncValidator");
-const syncValidator_1 = require("./syncValidator");
 function validateChain(state_1, rules_1) {
     return __awaiter(this, arguments, void 0, function* (state, rules, options = {}) {
         for (const parsedRule of rules) {
-            const syncFn = (0, syncValidator_1.getSyncRule)(parsedRule.rule);
+            const syncFn = (0, ruleRegistry_1.getSyncRule)(parsedRule.rule);
             const asyncFn = (0, asyncValidator_1.getAsyncRule)(parsedRule.rule);
             let isValid = false;
             if (syncFn) {
@@ -29,12 +29,18 @@ function validateChain(state_1, rules_1) {
             }
             if (!isValid) {
                 if (parsedRule.customMessageKey && options.i18n) {
-                    return { valid: false, message: options.i18n(parsedRule.customMessageKey, parsedRule.params) };
+                    return {
+                        valid: false,
+                        message: options.i18n(parsedRule.customMessageKey, parsedRule.params),
+                    };
                 }
                 if (parsedRule.customMessage) {
                     return { valid: false, message: parsedRule.customMessage };
                 }
-                return { valid: false, message: `Field '${state.key}' failed rule '${parsedRule.rule}'.` };
+                return {
+                    valid: false,
+                    message: `Field '${state.key}' failed rule '${parsedRule.rule}'.`,
+                };
             }
         }
         return { valid: true };

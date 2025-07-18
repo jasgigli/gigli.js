@@ -1,7 +1,6 @@
 import { validateAST } from '../src/core/engine/validateAST';
 import { registerAsyncRule } from '../src/core/validator/asyncValidator';
 import { registerSyncRule } from '../src/core/validator/syncValidator';
-import { registerTransformer } from '../src/core/validator/transformer';
 
 describe('Async and Custom Rules/Transformers', () => {
   beforeAll(() => {
@@ -9,11 +8,8 @@ describe('Async and Custom Rules/Transformers', () => {
     registerSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value.startsWith('A'));
     // Register a custom async rule
     registerAsyncRule('isEvenAsync', async (state) => typeof state.value === 'number' && state.value % 2 === 0);
-    // Register a custom transformer
-    registerTransformer('reverse', (value) => typeof value === 'string' ? value.split('').reverse().join('') : value);
-    // Debug output
-    // eslint-disable-next-line no-console
-    console.log('Custom rules and transformers registered for async_custom.test.ts');
+    // Remove the custom transformer registration for 'reverse' since it is already registered globally
+    // registerTransformer('reverse', (value) => typeof value === 'string' ? value.split('').reverse().join('') : value);
   });
 
   it('should validate with a custom sync rule', async () => {
@@ -44,7 +40,13 @@ describe('Async and Custom Rules/Transformers', () => {
       rules: [{ type: 'rule', name: 'startsWithA' }],
     };
     // 'elppA' reversed is 'Apple', which starts with 'A'
-    expect((await validateAST(ast, 'elppA')).valid).toBe(true);
-    expect((await validateAST(ast, 'ananab')).valid).toBe(false);
+    const result1 = await validateAST(ast, 'elppA');
+    // eslint-disable-next-line no-console
+    console.log('validateAST result for elppA:', result1);
+    expect(result1.valid).toBe(true);
+    const result2 = await validateAST(ast, 'ananab');
+    // eslint-disable-next-line no-console
+    console.log('validateAST result for ananab:', result2);
+    expect(result2.valid).toBe(false);
   });
 });

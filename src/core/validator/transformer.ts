@@ -1,31 +1,23 @@
 import type { Transformer } from "../../types/validator/types";
+import { getTransformer as registryGetTransformer, registerTransformer as registryRegisterTransformer } from "../registry/transformerRegistry";
 
-const transformers: Record<string, Transformer> = {
-  trim: (value) => (typeof value === "string" ? value.trim() : value),
-  lower: (value) => (typeof value === "string" ? value.toLowerCase() : value),
-  number: (value) => (value === null || value === "" ? value : Number(value)),
-  upper: (value) => (typeof value === "string" ? value.toUpperCase() : value),
-  capitalize: (value) =>
-    typeof value === "string"
-      ? value.charAt(0).toUpperCase() + value.slice(1)
-      : value,
-  boolean: (value) =>
-    value === "true" || value === true
-      ? true
-      : value === "false" || value === false
-        ? false
-        : value,
-  string: (value) => (value == null ? "" : String(value)),
-};
+// Register built-in transformers using the singleton registry
+registryRegisterTransformer('trim', (value) => (typeof value === "string" ? value.trim() : value));
+registryRegisterTransformer('lower', (value) => (typeof value === "string" ? value.toLowerCase() : value));
+registryRegisterTransformer('number', (value) => (value === null || value === "" ? value : Number(value)));
+registryRegisterTransformer('upper', (value) => (typeof value === "string" ? value.toUpperCase() : value));
+registryRegisterTransformer('capitalize', (value) => typeof value === "string" ? value.charAt(0).toUpperCase() + value.slice(1) : value);
+registryRegisterTransformer('boolean', (value) => value === "true" || value === true ? true : value === "false" || value === false ? false : value);
+registryRegisterTransformer('string', (value) => (value == null ? "" : String(value)));
 
 export function registerTransformer(name: string, fn: Transformer) {
-  transformers[name] = fn;
+  registryRegisterTransformer(name, fn);
 }
 
 export function applyTransformers(value: any, transformerNames: string[]): any {
   let transformedValue = value;
   for (const name of transformerNames) {
-    const transformerFn = transformers[name];
+    const transformerFn = registryGetTransformer(name);
     if (!transformerFn) throw new Error(`Unknown transformer: "${name}"`);
     transformedValue = transformerFn(transformedValue);
   }
@@ -33,5 +25,5 @@ export function applyTransformers(value: any, transformerNames: string[]): any {
 }
 
 export function getTransformer(name: string) {
-  return transformers[name];
+  return registryGetTransformer(name);
 }

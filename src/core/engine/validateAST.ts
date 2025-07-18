@@ -1,6 +1,6 @@
+import { getSyncRule } from "../../core/registry/ruleRegistry";
 import { getTransformer } from "../../core/registry/transformerRegistry";
 import { getAsyncRule } from "../../core/validator/asyncValidator";
-import { getSyncRule } from "../../core/validator/syncValidator";
 import type { ValidationTraceResult } from "../../types/engine/types";
 
 export async function validateAST(
@@ -21,6 +21,9 @@ export async function validateAST(
         const fn = getTransformer(t.name);
         if (fn) {
           currentValue = fn(currentValue, t.params);
+          // Debug output
+          // eslint-disable-next-line no-console
+          console.log(`[validateAST] Transformer '${t.name}': before='${before}', after='${currentValue}'`);
           trace.push({
             node: t,
             valueBefore: before,
@@ -50,6 +53,9 @@ export async function validateAST(
             context,
           };
           result = syncFn(state, r.params);
+          // Debug output
+          // eslint-disable-next-line no-console
+          console.log(`[validateAST] Rule '${r.name}': value='${currentValue}', params=${JSON.stringify(r.params)}, result=${result}`);
           trace.push({
             node: r,
             valueBefore: before,
@@ -68,6 +74,9 @@ export async function validateAST(
             context,
           };
           result = await asyncFn(state, r.params);
+          // Debug output
+          // eslint-disable-next-line no-console
+          console.log(`[validateAST] Async Rule '${r.name}': value='${currentValue}', params=${JSON.stringify(r.params)}, result=${result}`);
           trace.push({
             node: r,
             valueBefore: before,

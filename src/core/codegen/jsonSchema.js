@@ -3,17 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateJsonSchema = generateJsonSchema;
 exports.isOptionalField = isOptionalField;
 function isOptionalField(node) {
-    return ((node.type === 'primitive' || node.type === 'object' || node.type === 'array') &&
+    return ((node.type === "primitive" ||
+        node.type === "object" ||
+        node.type === "array") &&
         !!node.optional);
 }
 function generateJsonSchema(node) {
-    if (node.type === 'primitive') {
+    if (node.type === "primitive") {
         let type = node.primitive;
-        if (type === 'any')
-            type = 'string';
+        if (type === "any")
+            type = "string";
         return { type };
     }
-    if (node.type === 'object') {
+    if (node.type === "object") {
         const properties = {};
         const required = [];
         for (const key in node.fields) {
@@ -22,18 +24,18 @@ function generateJsonSchema(node) {
                 required.push(key);
         }
         return {
-            type: 'object',
+            type: "object",
             properties,
             required: required.length ? required : undefined,
         };
     }
-    if (node.type === 'array') {
+    if (node.type === "array") {
         return {
-            type: 'array',
+            type: "array",
             items: generateJsonSchema(node.element),
         };
     }
-    if (node.type === 'class') {
+    if (node.type === "class") {
         // Treat class like object for JSON Schema
         const properties = {};
         const required = [];
@@ -43,18 +45,18 @@ function generateJsonSchema(node) {
                 required.push(key);
         }
         return {
-            type: 'object',
+            type: "object",
             properties,
             required: required.length ? required : undefined,
         };
     }
-    if (node.type === 'pipeline') {
+    if (node.type === "pipeline") {
         // Output the schema for the first validate step, or a generic object
-        const validateStep = node.steps.find((s) => s.type === 'validate');
+        const validateStep = node.steps.find((s) => s.type === "validate");
         if (validateStep && validateStep.schema) {
             return generateJsonSchema(validateStep.schema);
         }
-        return { type: 'object' };
+        return { type: "object" };
     }
     return {};
 }

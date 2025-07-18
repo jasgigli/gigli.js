@@ -10,16 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateAST = validateAST;
+const ruleRegistry_1 = require("../../core/registry/ruleRegistry");
 const transformerRegistry_1 = require("../../core/registry/transformerRegistry");
 const asyncValidator_1 = require("../../core/validator/asyncValidator");
-const syncValidator_1 = require("../../core/validator/syncValidator");
 function validateAST(node_1, value_1) {
     return __awaiter(this, arguments, void 0, function* (node, value, context = {}) {
         const trace = [];
         let valid = true;
         let errors = [];
         let currentValue = value;
-        if (node.type === 'primitive') {
+        if (node.type === "primitive") {
             // Apply transformers
             if (node.transformers) {
                 for (const t of node.transformers) {
@@ -27,10 +27,21 @@ function validateAST(node_1, value_1) {
                     const fn = (0, transformerRegistry_1.getTransformer)(t.name);
                     if (fn) {
                         currentValue = fn(currentValue, t.params);
-                        trace.push({ node: t, valueBefore: before, valueAfter: currentValue });
+                        // Debug output
+                        // eslint-disable-next-line no-console
+                        console.log(`[validateAST] Transformer '${t.name}': before='${before}', after='${currentValue}'`);
+                        trace.push({
+                            node: t,
+                            valueBefore: before,
+                            valueAfter: currentValue,
+                        });
                     }
                     else {
-                        trace.push({ node: t, valueBefore: before, error: `Unknown transformer: ${t.name}` });
+                        trace.push({
+                            node: t,
+                            valueBefore: before,
+                            error: `Unknown transformer: ${t.name}`,
+                        });
                     }
                 }
             }
@@ -38,29 +49,59 @@ function validateAST(node_1, value_1) {
             if (node.rules) {
                 for (const r of node.rules) {
                     const before = currentValue;
-                    const syncFn = (0, syncValidator_1.getSyncRule)(r.name);
+                    const syncFn = (0, ruleRegistry_1.getSyncRule)(r.name);
                     const asyncFn = (0, asyncValidator_1.getAsyncRule)(r.name);
                     let result = false;
                     if (syncFn) {
-                        const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+                        const state = {
+                            key: "",
+                            value: currentValue,
+                            data: { value: currentValue },
+                            context,
+                        };
                         result = syncFn(state, r.params);
-                        trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
+                        // Debug output
+                        // eslint-disable-next-line no-console
+                        console.log(`[validateAST] Rule '${r.name}': value='${currentValue}', params=${JSON.stringify(r.params)}, result=${result}`);
+                        trace.push({
+                            node: r,
+                            valueBefore: before,
+                            ruleApplied: r.name,
+                            result,
+                        });
                         if (!result) {
                             valid = false;
                             errors.push(r.message || `Failed rule: ${r.name}`);
                         }
                     }
                     else if (asyncFn) {
-                        const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+                        const state = {
+                            key: "",
+                            value: currentValue,
+                            data: { value: currentValue },
+                            context,
+                        };
                         result = yield asyncFn(state, r.params);
-                        trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
+                        // Debug output
+                        // eslint-disable-next-line no-console
+                        console.log(`[validateAST] Async Rule '${r.name}': value='${currentValue}', params=${JSON.stringify(r.params)}, result=${result}`);
+                        trace.push({
+                            node: r,
+                            valueBefore: before,
+                            ruleApplied: r.name,
+                            result,
+                        });
                         if (!result) {
                             valid = false;
                             errors.push(r.message || `Failed rule: ${r.name}`);
                         }
                     }
                     else {
-                        trace.push({ node: r, valueBefore: before, error: `Unknown rule: ${r.name}` });
+                        trace.push({
+                            node: r,
+                            valueBefore: before,
+                            error: `Unknown rule: ${r.name}`,
+                        });
                         valid = false;
                         errors.push(`Unknown rule: ${r.name}`);
                     }
@@ -68,7 +109,7 @@ function validateAST(node_1, value_1) {
             }
             return { valid, value: currentValue, errors, trace };
         }
-        if (node.type === 'object') {
+        if (node.type === "object") {
             const out = {};
             for (const key in node.fields) {
                 const fieldNode = node.fields[key];
@@ -83,11 +124,11 @@ function validateAST(node_1, value_1) {
             }
             return { valid, value: out, errors, trace };
         }
-        if (node.type === 'array') {
+        if (node.type === "array") {
             if (!Array.isArray(value)) {
                 valid = false;
-                errors.push('Value is not an array');
-                trace.push({ node, valueBefore: value, error: 'Value is not an array' });
+                errors.push("Value is not an array");
+                trace.push({ node, valueBefore: value, error: "Value is not an array" });
                 return { valid, value, errors, trace };
             }
             const out = [];
@@ -102,7 +143,7 @@ function validateAST(node_1, value_1) {
             }
             return { valid, value: out, errors, trace };
         }
-        if (node.type === 'pipeline') {
+        if (node.type === "pipeline") {
             let pipelineValue = value;
             let pipelineValid = true;
             let pipelineErrors = [];
@@ -111,28 +152,36 @@ function validateAST(node_1, value_1) {
             let effectStep = null;
             let effectTrace = null;
             for (const step of node.steps) {
-                if (step.type === 'transform') {
+                if (step.type === "transform") {
                     const before = pipelineValue;
                     let after = pipelineValue;
-                    if (typeof step.fn === 'function') {
+                    if (typeof step.fn === "function") {
                         after = step.fn(pipelineValue);
                     }
-                    else if (step.fn && step.fn.type === 'transformer') {
+                    else if (step.fn && step.fn.type === "transformer") {
                         const fn = (0, transformerRegistry_1.getTransformer)(step.fn.name);
                         if (fn) {
                             after = fn(pipelineValue, step.fn.params);
                         }
                         else {
                             pipelineErrors.push(`Unknown transformer: ${step.fn.name}`);
-                            pipelineTrace.push({ node: step.fn, valueBefore: before, error: `Unknown transformer: ${step.fn.name}` });
+                            pipelineTrace.push({
+                                node: step.fn,
+                                valueBefore: before,
+                                error: `Unknown transformer: ${step.fn.name}`,
+                            });
                             pipelineValid = false;
                             continue;
                         }
                     }
-                    pipelineTrace.push({ node: step, valueBefore: before, valueAfter: after });
+                    pipelineTrace.push({
+                        node: step,
+                        valueBefore: before,
+                        valueAfter: after,
+                    });
                     pipelineValue = after;
                 }
-                else if (step.type === 'validate') {
+                else if (step.type === "validate") {
                     const res = yield validateAST(step.schema, pipelineValue, context);
                     pipelineTrace.push(...res.trace);
                     pipelineValue = res.value;
@@ -141,16 +190,21 @@ function validateAST(node_1, value_1) {
                         pipelineErrors.push(...res.errors);
                     }
                 }
-                else if (step.type === 'refine') {
+                else if (step.type === "refine") {
                     const before = pipelineValue;
                     const result = step.fn(pipelineValue);
-                    pipelineTrace.push({ node: step, valueBefore: before, ruleApplied: 'refine', result });
+                    pipelineTrace.push({
+                        node: step,
+                        valueBefore: before,
+                        ruleApplied: "refine",
+                        result,
+                    });
                     if (!result) {
                         pipelineValid = false;
-                        pipelineErrors.push(step.message || 'Refinement failed');
+                        pipelineErrors.push(step.message || "Refinement failed");
                     }
                 }
-                else if (step.type === 'dispatch') {
+                else if (step.type === "dispatch") {
                     // Implement dispatch logic
                     const fieldValue = pipelineValue[step.field];
                     const schema = step.cases[fieldValue];
@@ -165,12 +219,16 @@ function validateAST(node_1, value_1) {
                         dispatchMatched = true;
                     }
                     else {
-                        pipelineTrace.push({ node: step, valueBefore: pipelineValue, error: `No dispatch case for value: ${fieldValue}` });
+                        pipelineTrace.push({
+                            node: step,
+                            valueBefore: pipelineValue,
+                            error: `No dispatch case for value: ${fieldValue}`,
+                        });
                         pipelineValid = false;
                         pipelineErrors.push(`No dispatch case for value: ${fieldValue}`);
                     }
                 }
-                else if (step.type === 'effect') {
+                else if (step.type === "effect") {
                     // Store effect step for after pipeline execution
                     effectStep = step;
                 }
@@ -180,7 +238,12 @@ function validateAST(node_1, value_1) {
                 effectTrace = { node: effectStep, valueBefore: pipelineValue };
                 if (pipelineValid && effectStep.onSuccess) {
                     try {
-                        effectStep.onSuccess({ input: value, output: pipelineValue, errors: pipelineErrors, trace: pipelineTrace });
+                        effectStep.onSuccess({
+                            input: value,
+                            output: pipelineValue,
+                            errors: pipelineErrors,
+                            trace: pipelineTrace,
+                        });
                         effectTrace.valueAfter = pipelineValue;
                     }
                     catch (e) {
@@ -189,7 +252,12 @@ function validateAST(node_1, value_1) {
                 }
                 else if (!pipelineValid && effectStep.onFailure) {
                     try {
-                        effectStep.onFailure({ input: value, output: pipelineValue, errors: pipelineErrors, trace: pipelineTrace });
+                        effectStep.onFailure({
+                            input: value,
+                            output: pipelineValue,
+                            errors: pipelineErrors,
+                            trace: pipelineTrace,
+                        });
                         effectTrace.valueAfter = pipelineValue;
                     }
                     catch (e) {
@@ -198,9 +266,14 @@ function validateAST(node_1, value_1) {
                 }
                 pipelineTrace.push(effectTrace);
             }
-            return { valid: pipelineValid, value: pipelineValue, errors: pipelineErrors, trace: pipelineTrace };
+            return {
+                valid: pipelineValid,
+                value: pipelineValue,
+                errors: pipelineErrors,
+                trace: pipelineTrace,
+            };
         }
-        if (node.type === 'class') {
+        if (node.type === "class") {
             const out = {};
             let classValid = true;
             let classErrors = [];
@@ -220,16 +293,35 @@ function validateAST(node_1, value_1) {
             if (node.refinements) {
                 for (const refine of node.refinements) {
                     const result = refine.fn(out);
-                    classTrace.push({ node: refine, valueBefore: out, ruleApplied: 'refine', result });
+                    classTrace.push({
+                        node: refine,
+                        valueBefore: out,
+                        ruleApplied: "refine",
+                        result,
+                    });
                     if (!result) {
                         classValid = false;
-                        classErrors.push(refine.message || 'Class refinement failed');
+                        classErrors.push(refine.message || "Class refinement failed");
                     }
                 }
             }
-            return { valid: classValid, value: out, errors: classErrors, trace: classTrace };
+            return {
+                valid: classValid,
+                value: out,
+                errors: classErrors,
+                trace: classTrace,
+            };
         }
-        trace.push({ node, valueBefore: value, error: `Unsupported node type: ${node.type}` });
-        return { valid: false, value, errors: [`Unsupported node type: ${node.type}`], trace };
+        trace.push({
+            node,
+            valueBefore: value,
+            error: `Unsupported node type: ${node.type}`,
+        });
+        return {
+            valid: false,
+            value,
+            errors: [`Unsupported node type: ${node.type}`],
+            trace,
+        };
     });
 }

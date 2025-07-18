@@ -15,8 +15,8 @@ exports.Refine = Refine;
 exports.getClassAST = getClassAST;
 require("reflect-metadata");
 const validateAST_1 = require("../engine/validateAST");
-const RULES_KEY = Symbol('gigli.js:rules');
-const REFINES_KEY = Symbol('gigli.js:refines');
+const RULES_KEY = Symbol("gigli.js:rules");
+const REFINES_KEY = Symbol("gigli.js:refines");
 function Rule(rule) {
     return function (target, propertyKey) {
         const rules = Reflect.getMetadata(RULES_KEY, target) || {};
@@ -37,8 +37,8 @@ class ValidatedModel {
         Object.assign(instance, data);
         // Synchronously call validate, but if it returns a Promise, throw an error to force migration to async
         const result = instance.validate();
-        if (result && typeof result.then === 'function') {
-            throw new Error('Use fromAsync() for async validation');
+        if (result && typeof result.then === "function") {
+            throw new Error("Use fromAsync() for async validation");
         }
         return instance;
     }
@@ -56,7 +56,9 @@ class ValidatedModel {
             const ast = getClassAST(this.constructor);
             const result = yield (0, validateAST_1.validateAST)(ast, this);
             if (!result.valid) {
-                const errorMsg = result.errors && result.errors.length > 0 ? result.errors.join('; ') : 'Validation failed';
+                const errorMsg = result.errors && result.errors.length > 0
+                    ? result.errors.join("; ")
+                    : "Validation failed";
                 throw new Error(errorMsg);
             }
             return result;
@@ -70,10 +72,10 @@ function getClassAST(target) {
     const fields = {};
     for (const key in rules) {
         const rule = rules[key];
-        fields[key] = typeof rule.toAST === 'function' ? rule.toAST() : rule;
+        fields[key] = typeof rule.toAST === "function" ? rule.toAST() : rule;
     }
     return {
-        type: 'class',
+        type: "class",
         className: target.name,
         fields,
         refinements: refines,

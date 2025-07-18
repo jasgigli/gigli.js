@@ -47,42 +47,42 @@ const helpers_1 = require("./helpers");
 function runCodegen(args) {
     return __awaiter(this, void 0, void 0, function* () {
         const opts = (0, helpers_1.parseArgs)(args);
-        if (!opts['schema'] || !opts['target']) {
-            console.error('[gigli.js] --schema and --target are required for codegen.');
+        if (!opts["schema"] || !opts["target"]) {
+            console.error("[gigli.js] --schema and --target are required for codegen.");
             (0, helpers_1.printHelp)();
             process.exit(1);
         }
-        const schemaPath = opts['schema'];
-        const target = opts['target'];
+        const schemaPath = opts["schema"];
+        const target = opts["target"];
         // Efficient: Register ts-node if loading a .ts file
-        if (schemaPath.endsWith('.ts')) {
-            require('ts-node/register');
+        if (schemaPath.endsWith(".ts")) {
+            require("ts-node/register");
         }
         try {
-            const schemaModule = yield Promise.resolve(`${require('path').resolve(schemaPath)}`).then(s => __importStar(require(s)));
+            const schemaModule = yield Promise.resolve(`${require("path").resolve(schemaPath)}`).then(s => __importStar(require(s)));
             const schema = schemaModule.default || schemaModule.schema || schemaModule.UserSchema;
             if (!schema) {
-                console.error('[gigli.js] Could not find a schema export in the file.');
+                console.error("[gigli.js] Could not find a schema export in the file.");
                 process.exit(1);
             }
-            const { generateJsonSchema } = yield Promise.resolve().then(() => __importStar(require('../core/codegen/jsonSchema')));
-            const { generateOpenApiSchema } = yield Promise.resolve().then(() => __importStar(require('../core/codegen/openApi')));
-            const ast = typeof schema.toAST === 'function' ? schema.toAST() : schema;
-            if (target === 'openapi') {
+            const { generateJsonSchema } = yield Promise.resolve().then(() => __importStar(require("../core/codegen/jsonSchema")));
+            const { generateOpenApiSchema } = yield Promise.resolve().then(() => __importStar(require("../core/codegen/openApi")));
+            const ast = typeof schema.toAST === "function" ? schema.toAST() : schema;
+            if (target === "openapi") {
                 const openapi = generateOpenApiSchema(ast);
                 console.log(JSON.stringify(openapi, null, 2));
             }
-            else if (target === 'jsonschema') {
+            else if (target === "jsonschema") {
                 const jsonschema = generateJsonSchema(ast);
                 console.log(JSON.stringify(jsonschema, null, 2));
             }
             else {
-                console.error('[gigli.js] Unknown target:', target);
+                console.error("[gigli.js] Unknown target:", target);
                 process.exit(1);
             }
         }
         catch (e) {
-            console.error('[gigli.js] Failed to load schema:', e);
+            console.error("[gigli.js] Failed to load schema:", e);
             process.exit(1);
         }
     });

@@ -19,15 +19,15 @@ function registerAsyncRule(name, fn) {
 // Do not use in main validation paths.
 const validate = (...args) => Promise.resolve({ isValid: true });
 // Cross-field and context-aware rules
-registerAsyncRule('equal', (state, params) => {
-    if (params.field && params.field.startsWith('$')) {
+registerAsyncRule("equal", (state, params) => {
+    if (params.field && params.field.startsWith("$")) {
         const fieldToCompare = params.field.substring(1);
         return Promise.resolve(state.value === state.data[fieldToCompare]);
     }
     return Promise.resolve(false);
 });
-registerAsyncRule('after', (state, params) => {
-    if (params.field && params.field.startsWith('$')) {
+registerAsyncRule("after", (state, params) => {
+    if (params.field && params.field.startsWith("$")) {
         const fieldToCompare = params.field.substring(1);
         const dateToCompare = new Date(state.data[fieldToCompare]);
         const currentDate = new Date(state.value);
@@ -35,11 +35,11 @@ registerAsyncRule('after', (state, params) => {
     }
     return Promise.resolve(false);
 });
-registerAsyncRule('when', (state, params) => __awaiter(void 0, void 0, void 0, function* () {
+registerAsyncRule("when", (state, params) => __awaiter(void 0, void 0, void 0, function* () {
     const { field, is, then, otherwise } = params;
     if (!field || !is)
         return true;
-    const targetField = field.startsWith('$') ? field.substring(1) : field;
+    const targetField = field.startsWith("$") ? field.substring(1) : field;
     const conditionValue = state.data[targetField];
     const conditionResult = yield validate({ temp: conditionValue }, { temp: is }, { context: state.context });
     if (conditionResult.isValid) {

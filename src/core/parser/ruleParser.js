@@ -3,22 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parse = parse;
 function parse(ruleString) {
     // Find the last '=>' to separate transformers from rules
-    let lastArrowIdx = ruleString.lastIndexOf('=>');
-    let transformersString = '';
+    let lastArrowIdx = ruleString.lastIndexOf("=>");
+    let transformersString = "";
     let rulesString = ruleString;
     if (lastArrowIdx !== -1) {
         transformersString = ruleString.slice(0, lastArrowIdx).trim();
         rulesString = ruleString.slice(lastArrowIdx + 2).trim();
     }
     const transformers = transformersString
-        ? transformersString.split('=>').map(t => t.trim()).filter(Boolean)
+        ? transformersString
+            .split("=>")
+            .map((t) => t.trim())
+            .filter(Boolean)
         : [];
-    const rules = rulesString.split('|').map(part => {
+    const rules = rulesString.split("|").map((part) => {
         part = part.trim();
         // Split only on the first ':'
-        const colonIdx = part.indexOf(':');
+        const colonIdx = part.indexOf(":");
         let ruleName = part;
-        let paramsString = '';
+        let paramsString = "";
         if (colonIdx !== -1) {
             ruleName = part.slice(0, colonIdx).trim();
             paramsString = part.slice(colonIdx + 1).trim();
@@ -27,20 +30,24 @@ function parse(ruleString) {
         let customMessage;
         let customMessageKey;
         if (paramsString) {
-            const paramPairs = paramsString.split(',').map(p => p.trim()).filter(Boolean);
+            const paramPairs = paramsString
+                .split(",")
+                .map((p) => p.trim())
+                .filter(Boolean);
             for (const pair of paramPairs) {
-                const eqIdx = pair.indexOf('=');
+                const eqIdx = pair.indexOf("=");
                 if (eqIdx === -1)
                     continue;
                 const key = pair.slice(0, eqIdx).trim();
                 let value = pair.slice(eqIdx + 1).trim();
-                if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                if ((value.startsWith('"') && value.endsWith('"')) ||
+                    (value.startsWith("'") && value.endsWith("'"))) {
                     value = value.slice(1, -1);
                 }
-                if (key === 'message') {
+                if (key === "message") {
                     customMessage = value;
                 }
-                else if (key === 'key') {
+                else if (key === "key") {
                     customMessageKey = value;
                 }
                 else {
@@ -48,7 +55,12 @@ function parse(ruleString) {
                 }
             }
         }
-        return { rule: ruleName, params, customMessage, customMessageKey };
+        return {
+            rule: ruleName,
+            params,
+            customMessage,
+            customMessageKey,
+        };
     });
     return { transformers, rules };
 }

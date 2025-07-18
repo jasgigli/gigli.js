@@ -48,42 +48,42 @@ const path_1 = require("path");
 const helpers_1 = require("./helpers");
 const [, , command, ...args] = process.argv;
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    if (!command || command === '--help' || command === '-h') {
+    if (!command || command === "--help" || command === "-h") {
         (0, helpers_1.printHelp)();
         process.exit(0);
     }
-    if (command === '--version' || command === '-v') {
+    if (command === "--version" || command === "-v") {
         // Read version from package.json, resolving from the CLI file location
         try {
-            let pkgPath = '';
+            let pkgPath = "";
             // Try to resolve from process.cwd() (for npx or global usage)
-            if ((0, fs_1.existsSync)((0, path_1.join)(process.cwd(), 'package.json'))) {
-                pkgPath = (0, path_1.join)(process.cwd(), 'package.json');
+            if ((0, fs_1.existsSync)((0, path_1.join)(process.cwd(), "package.json"))) {
+                pkgPath = (0, path_1.join)(process.cwd(), "package.json");
             }
             else {
                 // Try to resolve from dist/cli location
-                const cliPath = typeof __dirname !== 'undefined' ? __dirname : process.cwd();
-                pkgPath = (0, path_1.join)(cliPath, '../../package.json');
+                const cliPath = typeof __dirname !== "undefined" ? __dirname : process.cwd();
+                pkgPath = (0, path_1.join)(cliPath, "../../package.json");
                 if (!(0, fs_1.existsSync)(pkgPath)) {
                     // Fallback: try up from dist/cli/index.js
-                    pkgPath = (0, path_1.join)(cliPath, '../../../package.json');
+                    pkgPath = (0, path_1.join)(cliPath, "../../../package.json");
                 }
             }
-            const pkg = JSON.parse((0, fs_1.readFileSync)(pkgPath, 'utf8'));
+            const pkg = JSON.parse((0, fs_1.readFileSync)(pkgPath, "utf8"));
             console.log(pkg.version);
         }
         catch (e) {
-            console.error('Could not read version:', e);
+            console.error("Could not read version:", e);
         }
         process.exit(0);
     }
-    if (command === 'codegen') {
-        const { runCodegen } = yield Promise.resolve().then(() => __importStar(require('./codegen')));
+    if (command === "codegen") {
+        const { runCodegen } = yield Promise.resolve().then(() => __importStar(require("./codegen")));
         yield runCodegen(args);
         return;
     }
-    if (command === 'analyze') {
-        const { runAnalyze } = yield Promise.resolve().then(() => __importStar(require('./analyze')));
+    if (command === "analyze") {
+        const { runAnalyze } = yield Promise.resolve().then(() => __importStar(require("./analyze")));
         yield runAnalyze(args);
         return;
     }
