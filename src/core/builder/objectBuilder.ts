@@ -1,6 +1,7 @@
+import type { IObjectBuilder } from '../../types/builder/types';
 import type { ObjectNode } from '../ast/nodes';
 
-export class ObjectBuilder {
+export class ObjectBuilder implements IObjectBuilder {
   private node: ObjectNode;
   constructor(fields: Record<string, any>) {
     this.node = {

@@ -1,6 +1,6 @@
-import type { ValidationTraceResult } from '../../../types/engine/types';
 import { getAsyncRule, getSyncRule } from '../../core/registry/ruleRegistry';
 import { getTransformer } from '../../core/registry/transformerRegistry';
+import type { ValidationTraceResult } from '../../types/engine/types';
 
 export async function validateAST(node: any, value: any, context: any = {}): Promise<ValidationTraceResult> {
   const trace: any[] = [];
@@ -89,7 +89,6 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
     return { valid, value: out, errors, trace };
   }
 
-  // TODO: pipeline, class, advanced nodes
   if (node.type === 'pipeline') {
     let pipelineValue = value;
     let pipelineValid = true;

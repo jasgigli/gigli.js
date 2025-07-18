@@ -1,38 +1,39 @@
-import { parse } from '../../core/parser';
+import type { IArrayBuilder, IObjectBuilder, IPrimitiveBuilder, IVBuilder } from '../../types/builder/types';
 import type { PrimitiveNode } from '../ast/nodes';
+import { parse } from '../parser/ruleParser';
 import { ArrayBuilder } from './arrayBuilder';
 import { ObjectBuilder } from './objectBuilder';
 import { PrimitiveBuilder } from './primitiveBuilder';
 
-export class VBuilder {
-  string() {
+export class VBuilder implements IVBuilder {
+  string(): IPrimitiveBuilder {
     return new PrimitiveBuilder('string');
   }
-  number() {
+  number(): IPrimitiveBuilder {
     return new PrimitiveBuilder('number');
   }
-  boolean() {
+  boolean(): IPrimitiveBuilder {
     return new PrimitiveBuilder('boolean');
   }
-  date() {
+  date(): IPrimitiveBuilder {
     return new PrimitiveBuilder('date');
   }
-  any() {
+  any(): IPrimitiveBuilder {
     return new PrimitiveBuilder('any');
   }
-  object(fields: Record<string, any>) {
+  object(fields: Record<string, IPrimitiveBuilder | IObjectBuilder | IArrayBuilder>): IObjectBuilder {
     return new ObjectBuilder(fields);
   }
-  array(element: any) {
+  array(element: IPrimitiveBuilder | IObjectBuilder | IArrayBuilder): IArrayBuilder {
     return new ArrayBuilder(element);
   }
-  from(ruleString: string) {
+  from(ruleString: string): { toAST(): PrimitiveNode } {
     const parsed = parse(ruleString);
     const node: PrimitiveNode = {
       type: 'primitive',
       primitive: 'any',
-      transformers: parsed.transformers.map(name => ({ type: 'transformer', name })),
-      rules: parsed.rules.map(r => ({
+      transformers: parsed.transformers.map((name: string) => ({ type: 'transformer', name })),
+      rules: parsed.rules.map((r: any) => ({
         type: 'rule',
         name: r.rule,
         params: r.params,
@@ -46,5 +47,5 @@ export class VBuilder {
   }
 }
 
-export const v = new VBuilder();
+export const v: IVBuilder = new VBuilder();
 export { ArrayBuilder, ObjectBuilder, PrimitiveBuilder };

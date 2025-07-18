@@ -38,6 +38,19 @@ export function analyzeSchema(ast: any): string[] {
         }
       }
     }
+    if (node.type === 'class') {
+      for (const key in node.fields) {
+        walk(node.fields[key], [...path, key]);
+      }
+      if (node.refinements) {
+        for (const refine of node.refinements) {
+          if (typeof refine.fn !== 'function') {
+            issues.push(`Invalid refinement at ${path.join('.') || 'root'}: not a function`);
+          }
+          // Optionally, you could try to statically analyze the refinement, but that's non-trivial
+        }
+      }
+    }
     // TODO: handle class nodes, refinements, etc.
   }
 

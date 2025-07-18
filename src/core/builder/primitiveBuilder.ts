@@ -1,7 +1,8 @@
 // import type { PrimitiveType } from '../../../types/ast/types';
+import type { IPrimitiveBuilder } from '../../types/builder/types';
 import type { PrimitiveNode } from '../ast/nodes';
 
-export class PrimitiveBuilder {
+export class PrimitiveBuilder implements IPrimitiveBuilder {
   private node: PrimitiveNode;
   constructor(type: string) {
     this.node = { type: 'primitive', primitive: type as any };
