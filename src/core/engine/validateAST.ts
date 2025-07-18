@@ -1,24 +1,9 @@
-import { ASTNode } from './ast';
-import { getAsyncRule, getSyncRule, getTransformer } from './registry';
+import type { ValidationTraceResult } from '../../../types/engine/types';
+import { getAsyncRule, getSyncRule } from '../../core/registry/ruleRegistry';
+import { getTransformer } from '../../core/registry/transformerRegistry';
 
-export interface ValidationTraceStep {
-  node: any;
-  valueBefore: any;
-  valueAfter?: any;
-  ruleApplied?: string;
-  result?: boolean;
-  error?: string;
-}
-
-export interface ValidationTraceResult {
-  valid: boolean;
-  value: any;
-  errors: string[];
-  trace: ValidationTraceStep[];
-}
-
-export async function validateAST(node: ASTNode, value: any, context: any = {}): Promise<ValidationTraceResult> {
-  const trace: ValidationTraceStep[] = [];
+export async function validateAST(node: any, value: any, context: any = {}): Promise<ValidationTraceResult> {
+  const trace: any[] = [];
   let valid = true;
   let errors: string[] = [];
   let currentValue = value;
@@ -78,7 +63,7 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
       trace.push(...res.trace);
       if (!res.valid) {
         valid = false;
-        errors.push(...res.errors.map(e => `${key}: ${e}`));
+        errors.push(...res.errors.map((e: string) => `${key}: ${e}`));
       }
     }
     return { valid, value: out, errors, trace };
@@ -98,7 +83,7 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
       trace.push(...res.trace);
       if (!res.valid) {
         valid = false;
-        errors.push(...res.errors.map(e => `[${i}]: ${e}`));
+        errors.push(...res.errors.map((e: string) => `[${i}]: ${e}`));
       }
     }
     return { valid, value: out, errors, trace };
@@ -109,7 +94,7 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
     let pipelineValue = value;
     let pipelineValid = true;
     let pipelineErrors: string[] = [];
-    let pipelineTrace: ValidationTraceStep[] = [];
+    let pipelineTrace: any[] = [];
     let dispatchMatched = false;
     let effectStep: any = null;
     let effectTrace: any = null;
@@ -198,7 +183,7 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
     const out: Record<string, any> = {};
     let classValid = true;
     let classErrors: string[] = [];
-    let classTrace: ValidationTraceStep[] = [];
+    let classTrace: any[] = [];
     for (const key in node.fields) {
       const fieldNode = node.fields[key];
       const fieldValue = value ? value[key] : undefined;
@@ -207,7 +192,7 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
       classTrace.push(...res.trace);
       if (!res.valid) {
         classValid = false;
-        classErrors.push(...res.errors.map(e => `${key}: ${e}`));
+        classErrors.push(...res.errors.map((e: string) => `${key}: ${e}`));
       }
     }
     // Run refinements

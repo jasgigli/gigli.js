@@ -1,85 +1,33 @@
-import { parse } from './parser';
-import { define, getDefinition } from './registry';
-import { applyTransformers, registerAsyncRule, registerSyncRule, registerTransformer, validateChain } from './validator';
+// Modular core exports for Validex
 
-export type ValidationSchema = {
-  [key: string]: string | ValidationSchema;
-};
+// Types
+export type { ValidationOptions, ValidationResult, ValidationSchema } from '../types/validator/types';
 
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, any>;
-  validatedData: Record<string, any>;
-}
+// Parser
+export { parse } from './parser/ruleParser';
 
-export interface ValidationOptions {
-  context?: Record<string, any>;
-  i18n?: (key: string, params: Record<string, string>) => string;
-}
+// Registry
+export { define, getDefinition } from './registry/definitionRegistry';
+export { getAsyncRule, getSyncRule, registerAsyncRule, registerSyncRule } from './registry/ruleRegistry';
+export { getTransformer, registerTransformer } from './registry/transformerRegistry';
 
-export async function validate(
-  data: Record<string, any>,
-  schema: ValidationSchema,
-  options: ValidationOptions = {}
-): Promise<ValidationResult> {
-  const errors: Record<string, any> = {};
-  const validatedData: Record<string, any> = { ...data };
-  let isValid = true;
+// Validator
+export { applyTransformers } from './validator/transformer';
+export { validateChain } from './validator/validateChain';
 
-  for (const key in schema) {
-    let ruleString = schema[key];
-    // --- Step 1: Resolve Custom Rule Definitions ---
-    let seen = new Set<string>();
-    while (typeof ruleString === 'string' && getDefinition(ruleString) && !seen.has(ruleString)) {
-      seen.add(ruleString);
-      ruleString = getDefinition(ruleString)!;
-    }
+// Engine
+export { validateAST } from './engine/validateAST';
 
-    // --- Case 1: Sub-Schema (Nested Object) ---
-    if (typeof ruleString === 'object') {
-      if (typeof validatedData[key] !== 'object' || validatedData[key] === null) {
-        isValid = false;
-        errors[key] = 'Must be an object.';
-        continue;
-      }
-      const subResult = await validate(validatedData[key], ruleString as ValidationSchema, options);
-      validatedData[key] = subResult.validatedData;
-      if (!subResult.isValid) {
-        isValid = false;
-        errors[key] = subResult.errors;
-      }
-      continue;
-    }
+// Codegen
+export { generateJsonSchema } from './codegen/jsonSchema';
+export { generateOpenApiSchema } from './codegen/openApi';
 
-    // --- Case 2: Rule String ---
-    const { transformers, rules } = parse(ruleString as string);
-    let value = validatedData[key];
-    // Apply transformers
-    try {
-      value = applyTransformers(value, transformers);
-      validatedData[key] = value;
-    } catch (e: any) {
-      isValid = false;
-      errors[key] = e.message;
-      continue;
-    }
+// Analyze
+export { analyzeSchema } from './analyze/analyzeSchema';
 
-    // --- Step 3: Execute Rule Chain with Full Context ---
-    const state = {
-      key,
-      value,
-      data: validatedData,
-      context: options.context || {},
-    };
-    const result = await validateChain(state, rules, options);
-    if (!result.valid) {
-      isValid = false;
-      errors[key] = result.message || `Field '${key}' is invalid.`;
-    }
-  }
+// Decorators
+export { getClassAST, Refine, Rule, ValidatedModel } from './decorators/validatedModel';
 
-  return { isValid, errors, validatedData };
-}
-
-export { define, registerAsyncRule, registerSyncRule, registerTransformer };
+// Builder
+export { ArrayBuilder, ObjectBuilder, PrimitiveBuilder, v, VBuilder } from './builder';
 

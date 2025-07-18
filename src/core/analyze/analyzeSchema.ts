@@ -1,9 +1,8 @@
-import { ASTNode } from './ast';
 
-export function analyzeSchema(ast: ASTNode): string[] {
+export function analyzeSchema(ast: any): string[] {
   const issues: string[] = [];
 
-  function walk(node: ASTNode, path: string[] = []) {
+  function walk(node: any, path: string[] = []) {
     if (node.type === 'primitive') {
       // Example: check for min > max
       if (node.rules) {

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ASTNode, ClassNode } from './ast';
+import type { ASTNode, ClassNode } from '../ast/nodes';
 
 const RULES_KEY = Symbol('validex:rules');
 const REFINES_KEY = Symbol('validex:refines');
@@ -42,7 +42,6 @@ export class ValidatedModel {
   }
 }
 
-// Helper to extract class metadata and build a ClassNode AST
 export function getClassAST(target: any): ClassNode {
   const rules = (Reflect as any).getMetadata(RULES_KEY, target.prototype) || {};
   const refines = (Reflect as any).getMetadata(REFINES_KEY, target) || [];
