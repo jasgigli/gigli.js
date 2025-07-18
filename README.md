@@ -1,17 +1,19 @@
-
-<!-- <div align="center">
-  <img src="https://raw.githubusercontent.com/jasgigli/gigli.js/main/assets/gigli.js-logo.png" alt="Gigli.js Logo" width="150"> -->
-  <h1>Gigli.js</h1>
-  <p><strong>The Metamorphic, Type-Safe Validation Engine for TypeScript.</strong></p>
-  <p>Define schemas once. Use them everywhere. Unify the best of Zod, Yup, and class-validator with a single, powerful, and portable runtime.</p>
-
-  <p>
-    <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/v/gigli.js.svg?style=flat-square" alt="NPM Version"></a>
-    <a href="https://github.com/your-username/gigli.js/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jasgigli/gigli.js/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
-    <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/dt/gigli.js.svg?style=flat-square" alt="NPM Downloads"></a>
-    <a href="https://github.com/jasgigli/gigli.js/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gigli.js.svg?style=flat-square" alt="License"></a>
-  </p>
+<div align="center">
+  <img src="assets/giglijs.png" alt="Gigli.js Logo" width="200" />
 </div>
+
+# Gigli.js
+
+> **Metamorphic, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. Generate OpenAPI/JSON Schema, use in Node.js, React, Express, NestJS, and more.**
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/v/gigli.js.svg?style=flat-square" alt="NPM Version"></a>
+  <a href="https://github.com/jasgigli/gigli.js/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jasgigli/gigli.js/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
+  <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/dt/gigli.js.svg?style=flat-square" alt="NPM Downloads"></a>
+  <a href="https://github.com/jasgigli/gigli.js/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gigli.js.svg?style=flat-square" alt="License"></a>
+  <a href="https://codecov.io/gh/jasgigli/gigli.js"><img src="https://codecov.io/gh/jasgigli/gigli.js/branch/main/graph/badge.svg?style=flat-square" alt="Code Coverage"></a>
+  <!-- Add more badges as needed, e.g., code coverage, bundle size -->
+</p>
 
 ---
 
@@ -230,6 +232,20 @@ Thanks to its zero-dependency core and hybrid module output, Gigli.js works seam
 
 ---
 
+## Documentation
+
+- **[Full Usage Guide](docs/USAGE.md)**
+- **[API Reference](#choose-your-style-the-3-apis)**
+- **[Examples](examples/)**
+
+## Links
+
+- [NPM Package](https://www.npmjs.com/package/gigli.js)
+- [GitHub Repository](https://github.com/jasgigli/gigli.js)
+- [Report Issues](https://github.com/jasgigli/gigli.js/issues)
+- [Contributing Guide](CONTRIBUTING.md)
+- [License (MIT)](LICENSE)
+
 ## Contributing
 
 We are building the future of data validation, and we'd love your help. Please read our **[CONTRIBUTING.md](https://github.com/your-username/gigli.js/blob/main/CONTRIBUTING.md)** to get started. Whether it's a bug report, a new feature, or a documentation improvement, all contributions are welcome!
@@ -237,3 +253,9 @@ We are building the future of data validation, and we'd love your help. Please r
 ## License
 
 Gigli.js is open-source software licensed under the **[MIT License](https://github.com/your-username/gigli.js/blob/main/LICENSE)**.
+
+---
+
+## Keywords
+
+validation, validator, typescript, schema, zod, yup, class-validator, openapi, jsonschema, decorators, cli, nodejs, react, express, nestjs, type-safe, builder, portable, runtime, inference, extensible, pipeline, unified, metamorphic

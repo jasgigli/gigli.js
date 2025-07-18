@@ -1,0 +1,32 @@
+# Exclude test files and folders
+/tests
+*.test.*
+
+# Exclude examples and docs
+/examples
+docs
+exampleSchema.ts
+
+# Exclude configs and scripts not needed in package
+*.config.js
+*.config.ts
+*.cjs
+*.md
+!.README.md
+!.LICENSE
+
+# Exclude assets
+assets
+
+# Exclude source files (only dist should be published)
+src
+
+# Exclude local tarballs and lock files
+gigli.js-*.tgz
+package-lock.json
+
+# Exclude misc
+.git
+.github
+.vscode
+.DS_Store

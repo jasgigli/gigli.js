@@ -4,13 +4,13 @@
   "description": "Validex: A modular, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. First official release.",
   "author": "Junaid Ali Shah Gigli",
   "license": "MIT",
-  "homepage": "https://github.com/jasgigli/validex#readme",
+  "homepage": "https://github.com/jasgigli/gigli.js#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jasgigli/validex.git"
+    "url": "git+https://github.com/jasgigli/gigli.js.git"
   },
   "bugs": {
-    "url": "https://github.com/jasgigli/validex/issues"
+    "url": "https://github.com/jasgigli/gigli.js/issues"
   },
   "keywords": [
     "validex",

@@ -8,8 +8,8 @@ export { parse } from './parser/ruleParser';
 
 // Registry
 export { define, getDefinition } from './registry/definitionRegistry';
-export { getAsyncRule, getSyncRule, registerAsyncRule, registerSyncRule } from './registry/ruleRegistry';
-export { getTransformer, registerTransformer } from './registry/transformerRegistry';
+export { getAsyncRule, getSyncRule, registerAsyncRule, registerSyncRule } from './validator/syncValidator';
+export { getTransformer, registerTransformer } from './validator/transformer';
 
 // Validator
 export { applyTransformers } from './validator/transformer';

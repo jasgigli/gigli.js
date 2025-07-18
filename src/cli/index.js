@@ -55,10 +55,20 @@ const [, , command, ...args] = process.argv;
     if (command === '--version' || command === '-v') {
         // Read version from package.json, resolving from the CLI file location
         try {
-            // Find the root directory of the package
-            const cliPath = require.resolve('./index.js');
-            const rootDir = (0, path_1.dirname)((0, path_1.dirname)(cliPath));
-            const pkgPath = (0, path_1.join)(rootDir, 'package.json');
+            let pkgPath = '';
+            // Try to resolve from process.cwd() (for npx or global usage)
+            if ((0, fs_1.existsSync)((0, path_1.join)(process.cwd(), 'package.json'))) {
+                pkgPath = (0, path_1.join)(process.cwd(), 'package.json');
+            }
+            else {
+                // Try to resolve from dist/cli location
+                const cliPath = typeof __dirname !== 'undefined' ? __dirname : process.cwd();
+                pkgPath = (0, path_1.join)(cliPath, '../../package.json');
+                if (!(0, fs_1.existsSync)(pkgPath)) {
+                    // Fallback: try up from dist/cli/index.js
+                    pkgPath = (0, path_1.join)(cliPath, '../../../package.json');
+                }
+            }
             const pkg = JSON.parse((0, fs_1.readFileSync)(pkgPath, 'utf8'));
             console.log(pkg.version);
         }

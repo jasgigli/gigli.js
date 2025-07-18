@@ -33,3 +33,6 @@ registerSyncRule('max', (state: any, p: any) => {
 export function getSyncRule(name: string): SyncValidator | undefined {
   return syncValidators[name];
 }
+
+export { getAsyncRule, registerAsyncRule } from './asyncValidator';
+

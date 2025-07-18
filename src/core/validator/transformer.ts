@@ -23,3 +23,7 @@ export function applyTransformers(value: any, transformerNames: string[]): any {
   }
   return transformedValue;
 }
+
+export function getTransformer(name: string) {
+  return transformers[name];
+}

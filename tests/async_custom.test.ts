@@ -1,13 +1,13 @@
 import { validateAST } from '../src/core/engine/validateAST';
-import { registerAsyncRule, registerSyncRule } from '../src/core/registry/ruleRegistry';
-import { registerTransformer } from '../src/core/registry/transformerRegistry';
+import { registerAsyncRule, registerSyncRule } from '../src/core/validator/syncValidator';
+import { registerTransformer } from '../src/core/validator/transformer';
 
 describe('Async and Custom Rules/Transformers', () => {
   beforeAll(() => {
     // Register a custom sync rule
-    registerSyncRule('startsWithA', (value) => typeof value === 'string' && value.startsWith('A'));
+    registerSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value.startsWith('A'));
     // Register a custom async rule
-    registerAsyncRule('isEvenAsync', async (value) => typeof value === 'number' && value % 2 === 0);
+    registerAsyncRule('isEvenAsync', async (state) => typeof state.value === 'number' && state.value % 2 === 0);
     // Register a custom transformer
     registerTransformer('reverse', (value) => typeof value === 'string' ? value.split('').reverse().join('') : value);
   });

@@ -20,10 +20,25 @@ export function parse(ruleString: string): ParsedValidation {
     let customMessageKey: string | undefined;
 
     if (paramsString) {
-      // Use regex to handle quoted messages and keys
-      // TODO: Complete paramRegex logic if needed
-      // const paramRegex = /(
-      // For now, skip param parsing
+      // Split by comma, but allow for quoted values
+      const paramPairs = paramsString.match(/([a-zA-Z0-9_]+\s*=\s*(?:"[^"]*"|'[^']*'|[^,]+))/g);
+      if (paramPairs) {
+        for (const pair of paramPairs) {
+          const [key, ...rest] = pair.split('=');
+          let value = rest.join('=').trim();
+          if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          const cleanKey = key.trim();
+          if (cleanKey === 'message') {
+            customMessage = value;
+          } else if (cleanKey === 'key') {
+            customMessageKey = value;
+          } else {
+            params[cleanKey] = value;
+          }
+        }
+      }
     }
     return { rule: ruleName, params, customMessage, customMessageKey } as ParsedRule;
   });
