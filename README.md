@@ -7,7 +7,7 @@
     <a href="https://img.shields.io/npm/dm/gigli.js?style=flat-square"><img src="https://img.shields.io/npm/dm/gigli.js?style=flat-square" alt="NPM Downloads"></a>
     <a href="https://bundlephobia.com/result?p=gigli.js"><img src="https://img.shields.io/bundlephobia/minzip/gigli.js?style=flat-square" alt="Bundle Size"></a>
     <a href="https://github.com/jasgigli/gigli.js/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jasgigli/gigli.js/ci.yml?branch=main&style=flat-square" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/jasgigli/gigli.js"><img src="https://codecov.io/gh/jasgigli/gigli.js/branch/main/graph/badge.svg?style=flat-square" alt="Code Coverage"></a>
+    <!-- <a href="https://codecov.io/gh/jasgigli/gigli.js"><img src="https://codecov.io/gh/jasgigli/gigli.js/branch/main/graph/badge.svg?style=flat-square" alt="Code Coverage"></a> -->
     <a href="https://github.com/jasgigli/gigli.js/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/gigli.js?style=flat-square" alt="License"></a>
     <a href="https://www.npmjs.com/package/gigli.js"><img src="https://img.shields.io/npm/types/gigli.js?style=flat-square" alt="Types"></a>
     <a href="https://github.com/jasgigli/gigli.js/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome"></a>
