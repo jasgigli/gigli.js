@@ -57,6 +57,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepublishOnly": "npm test && npm run build",
     "release": "npm run prepublishOnly && npm publish"
   },
