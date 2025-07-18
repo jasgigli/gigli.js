@@ -1,4 +1,4 @@
-# validex Usage Guide
+# validex Usage Guide (v1.0.0)
 
 ## Basic Usage
 
@@ -7,9 +7,11 @@ See the README for a quick start. Here are more advanced examples:
 ### Nested Validation
 You can validate nested objects by validating each level separately:
 ```typescript
+import { validate } from 'validex';
+
 const userSchema = {
   name: 'string:min=2',
-  profile: 'object', // You can add custom logic for objects
+  profile: 'object',
 };
 
 const profileSchema = {
@@ -25,15 +27,15 @@ const user = {
   }
 };
 
-const userResult = validate(user, userSchema);
+const userResult = await validate(user, userSchema);
 if (userResult.isValid) {
-  const profileResult = validate(user.profile, profileSchema);
+  const profileResult = await validate(user.profile, profileSchema);
   // ...
 }
 ```
 
 ### Custom Rules
-You can extend validex by adding your own rules in `src/core/validator.ts`.
+You can extend validex by adding your own rules using the registry API (see README for details).
 
 ### Error Handling
 The `errors` object returned by `validate` maps field names to error messages. You can display these in your UI or logs.

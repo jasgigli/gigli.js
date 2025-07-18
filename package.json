@@ -1,7 +1,7 @@
 {
   "name": "validex",
-  "version": "4.0.0",
-  "description": "The metamorphic, type-safe validation engine for TypeScript. A single, unified runtime that combines the best of Zod, Yup, and class-validator with unparalleled portability and power.",
+  "version": "1.0.0",
+  "description": "Validex: A modular, type-safe validation engine for TypeScript. Unified runtime, builder, decorator, and string rule support. First official release.",
   "author": "Junaid Ali Shah Gigli",
   "license": "MIT",
   "homepage": "https://github.com/jasgigli/validex#readme",

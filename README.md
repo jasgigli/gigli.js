@@ -1,24 +1,18 @@
-# Validex V4: The Metamorphic Validation Engine
+# Validex v1.0.0: The Modular, Type-Safe Validation Engine
 
-Validex is a metamorphic, type-safe validation engine for the modern web. It unifies the best features of Zod, Yup, Joi, and class-validator into a single, cohesive, and unbelievably powerful library.
+Validex is a modular, type-safe validation engine for the modern web. It unifies the best features of Zod, Yup, Joi, and class-validator into a single, cohesive, and unbelievably powerful library.
 
-## The Validex V4 Difference
-
-| Feature | Zod | Yup | class-validator | **Validex V4** |
-| :--- | :---: | :---: | :---: | :---: |
-| Type Inference | ✅ | ❌ | ✅ | ✅ |
-| Schema Builder API | ✅ | ✅ | ❌ | ✅ |
-| Decorator API | ❌ | ❌ | ✅ | ✅ |
-| Portable String Rules | ❌ | ❌ | ❌ | ✅ |
-| **Unified Runtime (Mix & Match)** | ❌ | ❌ | ❌ | 🔥 **Yes** |
-| **Validation Pipelines & Dispatch** | ❌ | ❌ | ❌ | 🔥 **Yes** |
-| **Detailed Error Tracing** | ❌ | ❌ | ❌ | 🔥 **Yes** |
-| **Auto OpenAPI/JSON Schema Gen** | ❌ | ❌ | ❌ | 🔥 **Yes** |
+## What's New in v1.0.0
+- **Modular, maintainable architecture**
+- Unified builder, decorator, and string rule APIs
+- CLI for codegen and schema analysis
+- Extensible registry for custom rules and transformers
+- Detailed error tracing and validation pipelines
 
 ## Quick Start
 
 ```bash
-npm install validex@next
+npm install validex@latest
 ```
 
 ### 1. Schema Builder API
@@ -86,17 +80,22 @@ npx validex codegen --schema ./mySchema.ts --target openapi
 npx validex analyze --schema ./mySchema.ts
 ```
 
-- `codegen`: Generate OpenAPI or JSON Schema from your Validex schemas (coming soon)
-- `analyze`: Statically analyze your schemas for impossible rules or performance issues (coming soon)
+- `codegen`: Generate OpenAPI or JSON Schema from your Validex schemas
+- `analyze`: Statically analyze your schemas for impossible rules or performance issues
 
 ---
 
 ## Extensibility
 
-- Register custom rules and transformers using the registry API.
-- Mix and match builder, decorator, and string rules in any combination.
-- Use Validex everywhere: React, Express, NestJS, tRPC, and more.
+- Register custom rules and transformers using the registry API
+- Mix and match builder, decorator, and string rules in any combination
+- Use Validex everywhere: React, Express, NestJS, tRPC, and more
 
 ---
 
-Validex V4 is the last validator you'll ever need. Define your schemas once, and use them everywhere: in type-safe builders, as class decorators, or as portable strings.
+Validex is the last validator you'll ever need. Define your schemas once, and use them everywhere: in type-safe builders, as class decorators, or as portable strings.
+
+---
+
+### Migration Note
+If you used a previous prototype or V4 branch, see the new modular structure and update your imports accordingly. All APIs are now organized by feature for maximum maintainability.

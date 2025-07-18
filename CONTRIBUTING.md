@@ -17,11 +17,13 @@ Thank you for considering contributing to validex! Your help is greatly apprecia
 - Build the project: `tsc`
 - Run tests: `npm test`
 
-## Project Structure
+## Project Structure (v1.0.0)
 
-- `src/` — Source code
-- `tests/` — Test files
+- `src/` — Source code, organized by feature (modular folders)
+- `tests/` — Test files, organized by feature
 - `.github/` — GitHub workflows and templates
+
+> **Note:** All code is organized by feature for maximum maintainability. Please add new features in the appropriate folder and keep code modular.
 
 ## Coding Standards
 
