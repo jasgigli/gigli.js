@@ -1,4 +1,4 @@
-import type { AsyncValidator } from '../../../types/validator/types';
+import type { AsyncValidator } from '../../types/validator/types';
 
 const asyncValidators: Record<string, AsyncValidator> = {};
 
@@ -6,18 +6,19 @@ export function registerAsyncRule(name: string, fn: AsyncValidator) {
   asyncValidators[name] = fn;
 }
 
-// Placeholder for validate to avoid circular dependency
+// Placeholder for validate to avoid circular dependency. This is only used for internal async rules like 'when'.
+// Do not use in main validation paths.
 const validate = (...args: any[]) => Promise.resolve({ isValid: true });
 
 // Cross-field and context-aware rules
-registerAsyncRule('equal', (state, params) => {
+registerAsyncRule('equal', (state: any, params: any) => {
   if (params.field && params.field.startsWith('$')) {
     const fieldToCompare = params.field.substring(1);
     return Promise.resolve(state.value === state.data[fieldToCompare]);
   }
   return Promise.resolve(false);
 });
-registerAsyncRule('after', (state, params) => {
+registerAsyncRule('after', (state: any, params: any) => {
   if (params.field && params.field.startsWith('$')) {
     const fieldToCompare = params.field.substring(1);
     const dateToCompare = new Date(state.data[fieldToCompare]);
@@ -26,7 +27,7 @@ registerAsyncRule('after', (state, params) => {
   }
   return Promise.resolve(false);
 });
-registerAsyncRule('when', async (state, params) => {
+registerAsyncRule('when', async (state: any, params: any) => {
   const { field, is, then, otherwise } = params;
   if (!field || !is) return true;
   const targetField = field.startsWith('$') ? field.substring(1) : field;
