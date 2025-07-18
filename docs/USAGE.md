@@ -1,8 +1,36 @@
 # validex Usage Guide (v1.0.0)
 
-## Basic Usage
+## CLI Usage
 
-See the README for a quick start. Here are more advanced examples:
+You can use the CLI directly with npx (no install required):
+
+```sh
+npx validex codegen --schema ./path/to/schema.ts --target openapi
+npx validex codegen --schema ./path/to/schema.ts --target jsonschema
+npx validex analyze --schema ./path/to/schema.ts
+```
+
+For help:
+
+```sh
+npx validex --help
+```
+
+## Basic Library Usage
+
+Here is a modern example using the builder API:
+
+```typescript
+import { validate, object, string } from 'validex';
+
+const userSchema = object({
+  name: string().min(2),
+  email: string().email(),
+});
+
+const result = validate(userSchema, { name: 'Alice', email: 'alice@example.com' });
+console.log(result);
+```
 
 ### Nested Validation
 You can validate nested objects by validating each level separately:

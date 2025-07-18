@@ -1,5 +1,6 @@
-import { getAsyncRule, getSyncRule } from '../../core/registry/ruleRegistry';
 import { getTransformer } from '../../core/registry/transformerRegistry';
+import { getAsyncRule } from '../../core/validator/asyncValidator';
+import { getSyncRule } from '../../core/validator/syncValidator';
 import type { ValidationTraceResult } from '../../types/engine/types';
 
 export async function validateAST(node: any, value: any, context: any = {}): Promise<ValidationTraceResult> {
@@ -30,14 +31,16 @@ export async function validateAST(node: any, value: any, context: any = {}): Pro
         const asyncFn = getAsyncRule(r.name);
         let result = false;
         if (syncFn) {
-          result = syncFn(currentValue, r.params, context);
+          const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+          result = syncFn(state, r.params);
           trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
           if (!result) {
             valid = false;
             errors.push(r.message || `Failed rule: ${r.name}`);
           }
         } else if (asyncFn) {
-          result = await asyncFn(currentValue, r.params, context);
+          const state = { key: '', value: currentValue, data: { value: currentValue }, context };
+          result = await asyncFn(state, r.params);
           trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
           if (!result) {
             valid = false;

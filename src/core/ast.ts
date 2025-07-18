@@ -1,4 +1,4 @@
-// AST Node Types for Validex V4 Unified Runtime
+// AST Node Types for gigli.js V4 Unified Runtime
 
 export type PrimitiveType = 'string' | 'number' | 'boolean' | 'date' | 'object' | 'array' | 'any';
 

@@ -30,6 +30,6 @@ describe('Decorator API', () => {
     }
     const ast = getClassAST(Product);
     expect(ast.type).toBe('class');
-    expect(ast.fields.name.primitive).toBe('string');
+    expect((ast.fields.name as any).primitive).toBe('string');
   });
 });

@@ -1,5 +1,5 @@
 export function printHelp() {
-  console.log(`Validex CLI\n\nUsage:\n  npx validex codegen --schema <file> --target <openapi|jsonschema>\n  npx validex analyze --schema <file>\n`);
+  console.log(`gigli.js CLI\n\nUsage:\n  npx gigli.js codegen --schema <file> --target <openapi|jsonschema>\n  npx gigli.js analyze --schema <file>\n`);
 }
 
 export function parseArgs(args: string[]): Record<string, string> {

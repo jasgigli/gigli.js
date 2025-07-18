@@ -1,4 +1,4 @@
-import type { ParsedValidation, ParsedRule } from '../../../types/parser/types';
+import type { ParsedRule, ParsedValidation } from '../../types/parser/types';
 
 export function parse(ruleString: string): ParsedValidation {
   let transformersString = '';
@@ -21,4 +21,11 @@ export function parse(ruleString: string): ParsedValidation {
 
     if (paramsString) {
       // Use regex to handle quoted messages and keys
-      const paramRegex = /(\
+      // TODO: Complete paramRegex logic if needed
+      // const paramRegex = /(
+      // For now, skip param parsing
+    }
+    return { rule: ruleName, params, customMessage, customMessageKey } as ParsedRule;
+  });
+  return { transformers, rules } as ParsedValidation;
+}

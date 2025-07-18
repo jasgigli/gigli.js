@@ -18,6 +18,17 @@ registerSyncRule('maxLength', (state: any, p: any) => typeof state.value === 'st
 registerSyncRule('pattern', (state: any, p: any) => typeof state.value === 'string' && new RegExp(p.value).test(state.value));
 registerSyncRule('enum', (state: any, p: any) => Array.isArray(p.values) ? p.values.includes(state.value) : typeof p.values === 'string' && p.values.split('|').includes(state.value));
 registerSyncRule('integer', (state: any) => typeof state.value === 'number' && Number.isInteger(state.value));
+// Add min/max rules for both string and number
+registerSyncRule('min', (state: any, p: any) => {
+  if (typeof state.value === 'string') return state.value.length >= Number(p.value);
+  if (typeof state.value === 'number') return state.value >= Number(p.value);
+  return false;
+});
+registerSyncRule('max', (state: any, p: any) => {
+  if (typeof state.value === 'string') return state.value.length <= Number(p.value);
+  if (typeof state.value === 'number') return state.value <= Number(p.value);
+  return false;
+});
 
 export function getSyncRule(name: string): SyncValidator | undefined {
   return syncValidators[name];

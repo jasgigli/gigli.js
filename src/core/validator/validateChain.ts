@@ -1,5 +1,5 @@
-import type { ValidationState } from '../../../types/validator/types';
-import type { ParsedRule } from '../../core/parser';
+import type { ParsedRule } from '../../types/parser/types';
+import type { ValidationState } from '../../types/validator/types';
 import { getAsyncRule } from './asyncValidator';
 import { getSyncRule } from './syncValidator';
 

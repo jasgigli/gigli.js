@@ -3,17 +3,21 @@ import { parseArgs, printHelp } from './helpers';
 export async function runCodegen(args: string[]) {
   const opts = parseArgs(args);
   if (!opts['schema'] || !opts['target']) {
-    console.error('[validex] --schema and --target are required for codegen.');
+    console.error('[gigli.js] --schema and --target are required for codegen.');
     printHelp();
     process.exit(1);
   }
   const schemaPath = opts['schema'];
   const target = opts['target'];
+  // Efficient: Register ts-node if loading a .ts file
+  if (schemaPath.endsWith('.ts')) {
+    require('ts-node/register');
+  }
   try {
     const schemaModule: any = await import(require('path').resolve(schemaPath));
     const schema = schemaModule.default || schemaModule.schema || schemaModule.UserSchema;
     if (!schema) {
-      console.error('[validex] Could not find a schema export in the file.');
+      console.error('[gigli.js] Could not find a schema export in the file.');
       process.exit(1);
     }
     const { generateJsonSchema } = await import('../core/codegen/jsonSchema');
@@ -26,11 +30,11 @@ export async function runCodegen(args: string[]) {
       const jsonschema = generateJsonSchema(ast);
       console.log(JSON.stringify(jsonschema, null, 2));
     } else {
-      console.error('[validex] Unknown target:', target);
+      console.error('[gigli.js] Unknown target:', target);
       process.exit(1);
     }
   } catch (e) {
-    console.error('[validex] Failed to load schema:', e);
+    console.error('[gigli.js] Failed to load schema:', e);
     process.exit(1);
   }
 }

@@ -181,6 +181,38 @@ npx validex codegen --schema ./src/schemas.ts --target openapi
 npx validex analyze --schema ./src/schemas.ts
 ```
 
+## Usage
+
+### As a Library
+
+```ts
+import { validate, object, string } from 'validex';
+
+const userSchema = object({
+  name: string(),
+  email: string().email(),
+});
+
+const result = validate(userSchema, { name: 'Alice', email: 'alice@example.com' });
+console.log(result);
+```
+
+### CLI Usage
+
+You can use the CLI directly with npx (no install required):
+
+```sh
+npx validex codegen --schema ./path/to/schema.ts --target openapi
+npx validex codegen --schema ./path/to/schema.ts --target jsonschema
+npx validex analyze --schema ./path/to/schema.ts
+```
+
+For help:
+
+```sh
+npx validex --help
+```
+
 ## Extensibility is Key
 
 Validex is built to be extended.
