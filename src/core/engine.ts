@@ -1,4 +1,5 @@
 import { ASTNode } from './ast';
+import { getAsyncRule, getSyncRule, getTransformer } from './registry';
 
 export interface ValidationTraceStep {
   node: any;
@@ -16,23 +17,6 @@ export interface ValidationTraceResult {
   trace: ValidationTraceStep[];
 }
 
-// Placeholder: registry for transformers and rules (to be unified with existing registry)
-const transformers: Record<string, (value: any) => any> = {
-  trim: (v) => (typeof v === 'string' ? v.trim() : v),
-  lower: (v) => (typeof v === 'string' ? v.toLowerCase() : v),
-};
-const rules: Record<string, (value: any, params?: Record<string, any>) => boolean> = {
-  min: (v, p) => {
-    if (!p || p.value === undefined) return false;
-    return typeof v === 'number' ? v >= Number(p.value) : typeof v === 'string' ? v.length >= Number(p.value) : false;
-  },
-  max: (v, p) => {
-    if (!p || p.value === undefined) return false;
-    return typeof v === 'number' ? v <= Number(p.value) : typeof v === 'string' ? v.length <= Number(p.value) : false;
-  },
-  email: (v) => typeof v === 'string' && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v),
-};
-
 export async function validateAST(node: ASTNode, value: any, context: any = {}): Promise<ValidationTraceResult> {
   const trace: ValidationTraceStep[] = [];
   let valid = true;
@@ -44,9 +28,9 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
     if (node.transformers) {
       for (const t of node.transformers) {
         const before = currentValue;
-        const fn = transformers[t.name];
+        const fn = getTransformer(t.name);
         if (fn) {
-          currentValue = fn(currentValue);
+          currentValue = fn(currentValue, t.params);
           trace.push({ node: t, valueBefore: before, valueAfter: currentValue });
         } else {
           trace.push({ node: t, valueBefore: before, error: `Unknown transformer: ${t.name}` });
@@ -57,10 +41,18 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
     if (node.rules) {
       for (const r of node.rules) {
         const before = currentValue;
-        const fn = rules[r.name];
+        const syncFn = getSyncRule(r.name);
+        const asyncFn = getAsyncRule(r.name);
         let result = false;
-        if (fn) {
-          result = fn(currentValue, r.params);
+        if (syncFn) {
+          result = syncFn(currentValue, r.params, context);
+          trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
+          if (!result) {
+            valid = false;
+            errors.push(r.message || `Failed rule: ${r.name}`);
+          }
+        } else if (asyncFn) {
+          result = await asyncFn(currentValue, r.params, context);
           trace.push({ node: r, valueBefore: before, ruleApplied: r.name, result });
           if (!result) {
             valid = false;
@@ -128,9 +120,9 @@ export async function validateAST(node: ASTNode, value: any, context: any = {}):
         if (typeof step.fn === 'function') {
           after = step.fn(pipelineValue);
         } else if (step.fn && step.fn.type === 'transformer') {
-          const fn = transformers[step.fn.name];
+          const fn = getTransformer(step.fn.name);
           if (fn) {
-            after = fn(pipelineValue);
+            after = fn(pipelineValue, step.fn.params);
           } else {
             pipelineErrors.push(`Unknown transformer: ${step.fn.name}`);
             pipelineTrace.push({ node: step.fn, valueBefore: before, error: `Unknown transformer: ${step.fn.name}` });

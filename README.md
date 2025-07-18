@@ -1,123 +1,102 @@
-# Validex V3: The Definitive Validation Language
+# Validex V4: The Metamorphic Validation Engine
 
-Validex is a declarative language for complex, enterprise-grade data validation, transformation, and sanitization. V3 introduces conditional logic, cross-field validation, rule reusability, and context-awareness.
+Validex is a metamorphic, type-safe validation engine for the modern web. It unifies the best features of Zod, Yup, Joi, and class-validator into a single, cohesive, and unbelievably powerful library.
 
-## The Validex Philosophy
+## The Validex V4 Difference
 
-- **Declarative:** Define *what* is valid, not *how* to check it.
-- **Portable:** Rules are strings, easily stored in JSON, YAML, or databases. Share them between your frontend and backend.
-- **Extensible:** If a rule doesn't exist, write it yourself and plug it into the engine.
+| Feature | Zod | Yup | class-validator | **Validex V4** |
+| :--- | :---: | :---: | :---: | :---: |
+| Type Inference | ✅ | ❌ | ✅ | ✅ |
+| Schema Builder API | ✅ | ✅ | ❌ | ✅ |
+| Decorator API | ❌ | ❌ | ✅ | ✅ |
+| Portable String Rules | ❌ | ❌ | ❌ | ✅ |
+| **Unified Runtime (Mix & Match)** | ❌ | ❌ | ❌ | 🔥 **Yes** |
+| **Validation Pipelines & Dispatch** | ❌ | ❌ | ❌ | 🔥 **Yes** |
+| **Detailed Error Tracing** | ❌ | ❌ | ❌ | 🔥 **Yes** |
+| **Auto OpenAPI/JSON Schema Gen** | ❌ | ❌ | ❌ | 🔥 **Yes** |
 
-## V3 Killer Features: Quick Look
+## Quick Start
+
+```bash
+npm install validex@next
+```
+
+### 1. Schema Builder API
 
 ```typescript
-import { validate, define } from 'validex';
+import { v } from 'validex';
 
-// 1. Define reusable, complex rules
-define('password', 'string:min=8,max=50');
-define('zipcode.us', 'string:len=5|regex:pattern=^\\d{5}$');
-
-const userRegistrationSchema = {
-  // 2. Use defined rules
-  password: 'password',
-  // 3. Cross-field validation ($ syntax)
-  passwordConfirm: 'required|equal:$password:key=errors.password.mismatch',
-
-  // 4. Powerful conditional logic
-  country: 'enum:values=USA|Canada',
-  zipCode: "when:$country,is:equal:USA,then:zipcode.us"
-};
-
-const result = await validate(userData, userRegistrationSchema, {
-  i18n: (key, params) => getTranslation(key, params) // Your i18n function
+const UserSchema = v.object({
+  username: v.string().min(3).max(20),
+  email: v.string().email(),
+  age: v.number().optional(),
+  role: v.string().from('enum:values=user|admin,key=errors.role.invalid'),
 });
 ```
 
-## Advanced Language Guide (V3)
-
-### Defining Reusable Rules: `define(name, ruleString)`
-
-Avoid repetition by defining custom rules once and reusing them anywhere.
+### 2. Decorator API
 
 ```typescript
-// in a central setup file (e.g., validation.setup.ts)
-import { define } from 'validex';
+import { v, ValidatedModel } from 'validex';
 
-define('slug', 'string:min=3|regex:pattern=^[a-z0-9-]+$');
-define('email', 'trim => lower => string|email:key=errors.invalid_email');
+@v.Refine((u) => u.password === u.passwordConfirm, { message: "Passwords don't match" })
+class CreateUserDto extends ValidatedModel {
+  @v.Rule(v.string().email())
+  email: string;
 
-// in your module
-const schema = { userEmail: 'email', postSlug: 'slug' };
+  @v.Rule('string:min=8,max=50')
+  password: string;
+
+  @v.Rule(v.string())
+  passwordConfirm: string;
+}
 ```
 
-### Cross-Field Validation: The `$` Prefix
-
-Reference the value of another field in your data object using `$`.
-
-- `equal:$fieldName`: Must be equal to the value of `fieldName`.
-- `after:$startDate`: Must be a date that comes after the date in `startDate`.
+### 3. Pipeline API
 
 ```typescript
-const schema = {
-  startDate: 'required|date',
-  endDate: 'required|date|after:$startDate'
-};
+const OrderPipeline = v.pipeline()
+  .transform((data) => ({ ...data, createdAt: new Date() }))
+  .validate(v.object({
+    orderId: v.string().min(1),
+    paymentMethod: v.string(),
+  }))
+  .dispatch('paymentMethod', {
+    'credit_card': v.object({ paymentDetails: v.string() }),
+    'paypal': v.object({ paymentDetails: v.string() }),
+  })
+  .refine((order) => order.items && order.items.length > 0, { message: 'Order must have at least one item' })
+  .effect({
+    onFailure: (trace) => console.log(`Validation failed for order`, trace),
+  });
 ```
 
-### Conditional Validation: `when(condition, rules)`
+### 4. Validation Trace™
 
-The `when` rule is the most powerful feature in V3. It applies validation rules based on the state of another field.
+Every validation run produces a detailed trace:
+- Input value
+- Each transformer and rule applied
+- The exact rule that failed
+- The value at each step
 
-**Syntax:** `when:$field,is:rule,then:rule,otherwise:rule`
+### 5. CLI Usage
 
-- `$field`: The field to check (with `$` prefix).
-- `is`: A Validex rule to validate the target field's value against.
-- `then`: A Validex rule to apply to the *current* field if the `is` condition passes.
-- `otherwise`: (Optional) A rule to apply if the `is` condition fails.
-
-```typescript
-const schema = {
-  delivery: 'boolean',
-  // The address field is only required if delivery is true
-  address: "when:$delivery,is:isTrue,then:required|string:min=10"
-};
+```bash
+npx validex codegen --schema ./mySchema.ts --target openapi
+npx validex analyze --schema ./mySchema.ts
 ```
 
-### Context-Aware Validation
+- `codegen`: Generate OpenAPI or JSON Schema from your Validex schemas (coming soon)
+- `analyze`: Statically analyze your schemas for impossible rules or performance issues (coming soon)
 
-Pass external data into your validation logic using the `options.context` object. This is perfect for checking permissions or other application-level states.
+---
 
-```typescript
-// Custom rule needing context
-registerSyncRule('roleAllowed', (state, params) => {
-  const { currentUser } = state.context;
-  return currentUser.isAdmin;
-});
+## Extensibility
 
-// Usage
-const result = await validate(
-  { role: 'admin' },
-  { role: 'roleAllowed' },
-  { context: { currentUser: { isAdmin: true } } }
-);
-```
+- Register custom rules and transformers using the registry API.
+- Mix and match builder, decorator, and string rules in any combination.
+- Use Validex everywhere: React, Express, NestJS, tRPC, and more.
 
-### Internationalization (i18n) with `key`
+---
 
-Decouple error messages from logic. Use the `key` parameter instead of `message`.
-
-```typescript
-// Rule
-const schema = { username: "string:min=3,key=errors.username.too_short" };
-
-// Validator call
-const result = await validate(data, schema, {
-  i18n: (key, params) => {
-    // e.g., key = 'errors.username.too_short', params = { min: '3' }
-    return i18next.t(key, params);
-  }
-});
-```
-```
-
-Validex V3 is now a complete, robust, and highly practical language and engine. It addresses the full lifecycle of modern data validation, from simple type-checking to complex, interdependent business logic, making it an extremely valuable tool in any software project.
+Validex V4 is the last validator you'll ever need. Define your schemas once, and use them everywhere: in type-safe builders, as class decorators, or as portable strings.
