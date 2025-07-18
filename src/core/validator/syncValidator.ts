@@ -83,7 +83,7 @@ registryRegisterSyncRule("max", (state: any, p: any) => {
   if (typeof state.value === "number") return state.value <= Number(maxValue);
   return false;
 });
-registryRegisterSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value.startsWith('A'));
+registryRegisterSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value[0]?.toLowerCase() === 'a');
 
 export function registerSyncRule(name: string, fn: SyncValidator) {
   registryRegisterSyncRule(name, fn);

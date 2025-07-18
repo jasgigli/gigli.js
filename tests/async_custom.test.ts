@@ -5,7 +5,7 @@ import { registerSyncRule } from '../src/core/validator/syncValidator';
 describe('Async and Custom Rules/Transformers', () => {
   beforeAll(() => {
     // Register a custom sync rule
-    registerSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value.startsWith('A'));
+    registerSyncRule('startsWithA', (state) => typeof state.value === 'string' && state.value[0]?.toLowerCase() === 'a');
     // Register a custom async rule
     registerAsyncRule('isEvenAsync', async (state) => typeof state.value === 'number' && state.value % 2 === 0);
     // Remove the custom transformer registration for 'reverse' since it is already registered globally
